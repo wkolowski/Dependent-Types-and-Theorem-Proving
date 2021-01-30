@@ -12,29 +12,85 @@
 \frame{\tableofcontents}
 
 \section{Intro: greetings, prerequisites, learning outcomes, plan of lectures, F*}
+% The lectures are mostly aimed at people who know some F# and are comfortable
+% with pattern matching, recursion, algebraic data types etc.
+
+% Learning outcomes:
+% - after listening to the lectures people shouldn't be scared of dependent
+%   types and formal proofs anymore
+% - if additionally they do some exercises, they should end up pretty good at
+%   basic proving (up to quantifiers), but maybe still struggling with stuff
+%   like defining inductive predicates
+
+\section{General idea}
+% A definition of dependent types (types that can depend on values) and an
+% example -- a good one would be the type of MxN matrices.
 
 \section{First-class types}
-% At this tage we can pretend that Type : Type.
+
 \subsection{What does ``first-class'' mean?}
-% (Lack of) first class functions in C, (lack of) first class async in C#?
-\subsection{Computing types by recursion}
-% Compute printf's type from format string.
+% Explain the notion of "first-class" using the (lack of) first class functions
+% in C (and maybe something else) as an example.
+
+% Then introduce the universe of types. At this stage we will pretend that
+% Type : Type. Mentioning the universe hierarchy should be postponed to lecture 3.
+
+\subsection{Computing with types}
+% Show that our functions can now juggle types the same way they can juggle
+% integers or strings.
+
+% Leading example: compute printf's type from format string.
 
 \section{Dependent functions}
-\subsection{Type-safe printf}
+% Introduce pi by analogy with ordinary function type.
+% Always call it "dependent function type" and use F* notation
+% (i.e. (x : A) -> P x) to minimize confusion.
+
+% Show some silly examples, like returning results of different types in
+% different if-branches. Maybe compare this to dynamic typing.
+
+\subsection{Example: typesafe printf}
+% Finish the typesafe printf example.
+
 \subsection{How to express polymorphism}
 % Polymorphic functions are just dependent functions with Type arguments.
+% Mention how this relates to type constructors, i.e. list : Type -> Type.
+
 \subsection{Implicit arguments and how to read function signatures}
+% Mention that with dependent types, we can infer some arguments from
+% the types of others, so we don't want to explicitly write all arguments.
 
 \section{Dependent pairs}
-\subsection{}
+% Introduce sigma by analogy with ordinary products.
+% Always call it "dependent pair type" and use F* notation
+% (i.e. (x : A) * P x) to minimize confusion.
 
-\section{Generalized algebraic data types}
+\subsection{Example: everybody loves filling forms}
+% An example, something along the lines of how to use dependent pairs
+% to avoid forms with "not applicable" fields.
+
+\section{Inductive families}
+% Refresher on ordinary algebraic data types.
+% Introduce inductive families by analogy with ordinary algebraic
+% data types.
+
 \subsection{Example: length-indexed lists}
+% Vectors - the canonical example of an inductive family.
+% Mention problems with partial functions like head and tail
+% and how to turn them into total functions on vectors.
+
 \subsection{Example: enforcing protocols}
+% Look up Idris tutorials/manuals/books for some example
+% on how to use inductive families for enforcing protocols,
+% i.e. for using sockets.
 
 \section{Refinement types}
+% Introduce refinement types, using F* notation (i.e. x : int{x > 5}).
+% Go over the head/tail example again, but this time using refinements
+% on ordinary lists.
+
 \section{Exercises}
+% No idea yet.
 
 \begin{frame}{}
 \begin{itemize}
