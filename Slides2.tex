@@ -29,8 +29,7 @@
 \subsubsection{Sum is disjunction}
 \subsubsection{Product is conjunction}
 \subsubsection{Unit is True}
-% In the above subsubsections, explain the
-% meaning of all connectives one by one.
+% In the above subsubsections, explain the meaning of all connectives one by one.
 
 \subsubsection{Falsity and negation}
 % Introduce the empty type using the mechanism of
@@ -54,22 +53,54 @@
 
 \subsection{Universal quantifier is the dependent function type}
 \subsection{Existential quantifier is the dependent pair type}
-% Describe rules for 
+% Describe rules for quantifiers by referring back to dependent
+% function and pair types from last lecture.
 
 \section{Inductive predicates and relations}
+% Explain how to interpret inductive families and predicates
+% and relations. Examples: list permutations, being element
+% of a list, there exists/all elements of a list satisfy
+% some predicate, a list has duplicate elements, etc.
 
-\section{Proof relevance}
+\subsection{Undecidability and generative thinking}
+% Explain the difference between defining a function which
+% checks if a property holds ("how to check" is a kind of
+% top-down thinking) and defining a property as an inductive
+% family ("how to generate all proofs of this" is a kind of
+% bottom-up thinking).
 
-\section{Equality}
-\subsection{How to define equality}
-\subsection{Undecidability}
-\subsection{Difference between propositions and booleans}
+\subsection{Proof relevance}
+% Explain the notion of proof relevance, i.e. that there can
+% be different proofs of some propositions, represented by
+% different elements of the corresponding type. Example:
+% being an element of a list.
 
-\section{Intrinsic vs extrinsic style}
+\subsection{Equality}
+% Some background on the classical definitions of equality
+% by Aristotle and Leibniz.
+
+% Show how to define equality as an inductive family.
+% Prove basic properties of equality.
+
+% Reminder: differences between differents kinds of
+% "equality": decidable equality, homogenous equality
+% and heterogenous equality.
 
 \section{Axioms and classical logic}
+% How to declare axioms and use them to regain classical logic.
+
+\section{How to find proofs}
+% Because propositions are types and proofs are programs,
+% finding proofs is basically the same as writing programs.
+% All the techniques programmers already know, like splitting
+% a function into subfunctions or refactoring some code into
+% a separate functions have their exact equivalents (splitting
+% a proof into lemmas and refactoring a part of a proofs into
+% a lemma, respectively).
 
 \section{Exercises}
+% Some basic properties of connectives and quantifiers.
+% Practice defining predicates and relations using inductive families.
 
 \begin{frame}{}
 \begin{itemize}
