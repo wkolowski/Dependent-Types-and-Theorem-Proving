@@ -42,12 +42,13 @@
 % Leading example: compute printf's type from format string.
 
 \section{Dependent functions}
-% Introduce pi by analogy with ordinary function type.
+% Introduce pi types by analogy with ordinary function type.
 % Always call it "dependent function type" and use F* notation
 % (i.e. (x : A) -> P x) to minimize confusion.
 
 % Show some silly examples, like returning results of different types in
-% different if-branches. Maybe compare this to dynamic typing.
+% different if-branches. Maybe compare this to dynamic typing and underline
+% the differences.
 
 \subsection{Example: typesafe printf}
 % Finish the typesafe printf example.
@@ -61,13 +62,33 @@
 % the types of others, so we don't want to explicitly write all arguments.
 
 \section{Dependent pairs}
-% Introduce sigma by analogy with ordinary products.
+% Introduce sigma types by analogy with ordinary products.
 % Always call it "dependent pair type" and use F* notation
 % (i.e. (x : A) * P x) to minimize confusion.
 
 \subsection{Example: everybody loves filling forms}
 % An example, something along the lines of how to use dependent pairs
 % to avoid forms with "not applicable" fields.
+
+\section{Optional: }
+% An optional section.
+
+\subsection{Sigma}
+% Introduce the sigma notation for dependent pair types.
+% Explain it by parallels with math's sigma notation for
+% addition. Introduce the name "dependent sum (type)".
+
+\subsection{Pi}
+% Introduce the pi notation for dependent function types.
+% Explain it by parallels with math's pi notation for
+% multiplication. Introduce the name "dependent product (type)".
+
+\subsection{Plus, cross and arrow}
+% Explain that dependent pair types are a generalization of
+% both sum types and product types.
+
+% Explain that dependent function types are a generalization of
+% both product types and function types.
 
 \section{Inductive families}
 % Refresher on ordinary algebraic data types.
