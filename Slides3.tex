@@ -11,30 +11,69 @@
 \frame{\titlepage}
 \frame{\tableofcontents}
 
+\section{The Big Lie: only some programs are proofs}
+% Explain that during the last lecture we may have been
+% led into believing some lies, namely that ALL programs
+% are proofs, which is not true in general and not true
+% neither for F# nor Haskell or any other mainstream
+% functional language.
+
 \section{Universes revisited}
-% Explain Russell's paradox and then expose the lie that we have been pretending
+% Explain Russell's paradox and then expose lie #1 that we have been pretending
 % is true up to now (i.e. that Type : Type). Mention the universe hierarchy
 % only briefly as a technical device to avoid the paradox, don't go into details.
 
 \section{Why infinite loops are evil}
 % Show how to prove a contradiction using a nonterminating program.
+% Use this to motivate termination checking.
+
+\section{Termination checking and well-foundedness}
+% Introduce the notion of well-founded relations. This may be done in a
+% simplified way in order not to bother people with definitions. Basically
+% in this view well-founded = argument somehow decreases. Then discuss the
+% most important ways of creating well-founded relations, i.e. products and
+% images.
+
+% At last discuss how termination checking is done in F*.
+
+\section{Positivity checking}
+% Give an example of a silly inductive type (along the lines of
+% Bad = Bad -> Bad) which allows us to implement recursive
+% programs without using recursion. Show how to use it to derive
+% a contradiction.
+
+% Then introduce the strict positivity criterion, i.e. inductive
+% type I can't have argument that have an occurrence of I to the
+% left of an arrow.
 
 \section{Why throwing exceptions is evil}
 % Show how to prove a contradiction by throwing an exception.
+% Use this to motivate a deeper investigation into what stuff
+% can programs do (besides number crunching of course) to be
+% considered valid proofs.
 
 \section{Purity and referential transparency}
 % Introduce (or reintroduce, depending on audience) the notions of purity
-% and referential transparency the way they are understood in Haskell
-% fold wisdom.
+% and referential transparency in the way they are understood in Haskell
+% folk wisdom.
 
 % Silly examples: Edinburgh is the capital of Scotland, Mary Jane loves Peter Parker.
 % Less silly examples: random() + random() != 2 * random()
 
 \section{Effects in F*}
-% Introduce the mechanism of effects as a way of control
+% Introduce the mechanism of effects as a way of staticly checking what side
+% effects programs are allowed to perform.
+
+% Explain how the effect system can be used to reconcile proofs and programs so
+% that programs can perform effects if allowed to, but proofs can't.
 
 \section{Exercises}
-	
+% Some repetitive exercises for concept testing:
+% Exercise 1: (why) is this function terminating?
+% Exercise 2: is this inductive type strictly positive?
+
+% Less repetitive exercises: no idea.
+
 \begin{frame}{}
 \begin{itemize}
 	\item 
