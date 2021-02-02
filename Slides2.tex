@@ -88,19 +88,47 @@
 % different elements of the corresponding type. Example:
 % being an element of a list.
 
-\subsection{Equality}
+\section{Equality}
 % Some background on the classical definitions of equality
 % by Aristotle and Leibniz.
 
+\subsection{Definition and convertibility}
 % Show how to define equality as an inductive family.
-% Prove basic properties of equality.
 
+% Show some example proofs, like 2 + 2 = 4 or some
+% more properties of list functions.
+
+% Explain why this definition even makes sense by
+% explaining how computation works and the notion
+% of convertibility.
+
+\subsection{Properties of equality}
+% Prove basic properties of equality, like symmetry
+% and transitivity.
+
+% Also prove some characterizations of equality for
+% some type formers, like pairs or sums.
+
+\subsection{Caveat: equality of functions and types}
+% Explain why we can't prove that extensionally equal
+% functions are equal.
+
+% Explain why we can't prove that isomorphic types are
+% equal. Some silly example: list and list', where
+% list' is just a primed copy of list.
+
+\subsection{Caveats: decidable and heterogenous equality}
 % Reminder: differences between differents kinds of
 % "equality": decidable equality, homogenous equality
 % and heterogenous equality.
 
 \section{Axioms and classical logic}
-% How to declare axioms and use them to regain classical logic.
+% Explain how to declare axioms and that assuming an axiom
+% breaks normalization (i.e programs built from axioms don't
+% always compute).
+
+% Example 1: functional extensionality axiom.
+% Exmaple 2: excluded middle.
 
 \section{How to find proofs}
 % Because propositions are types and proofs are programs,
@@ -114,6 +142,8 @@
 \section{Exercises}
 % Some basic properties of connectives and quantifiers.
 % Practice defining predicates and relations using inductive families.
+% Implement some decision procedures for equality of numbers, prove
+% some equational properties of numbers.
 
 \begin{frame}{}
 \begin{itemize}
