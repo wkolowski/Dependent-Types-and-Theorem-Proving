@@ -11,13 +11,47 @@
 \frame{\titlepage}
 \frame{\tableofcontents}
 
-% This lecture will be given by Mateusz. List of topics to mention:
-% - subtyping
-% - SMT solver related stuff
+% This lecture will be given by Mateusz. List of possible topics:
+
+% - modules and interfaces – no nested modules, how are they extracted
+
+% - building and extraction – how the integration with our .net codebase works
+
+% - subtyping – no subtyping on inductive types (some examples)
+
+% - no polymorphism on effects – need to define functions couple of times in some context (can be limited with subeffecting e.g. total functions can be called in bigger contexts when working with total types)
+
+% SMT solver related stuff:
+
+% - can prove simple properties automatically, e.g. base cases of induction and step often requires only calling the property recursively with smaller arguments
+
+% - smt patterns to apply lemmas automatically
+
+% - F* encodes certain properties / code to a format understandable by SMT and makes it look for counterexample in a negated property – it can’t give you nice errors in case it fails to prove something
+
+% - F* normalization (evaluation during type-checking) can help SMT with recursive functions and inductive types
+
 % - extraction and erasure
-% - tactics
-% - quotation and antiquotation
-% - .NET interop and known limitations
+
+% - Obj.magic not available -> dependent types not available at runtime, but can be used in refinements as it will be erased during extraction anyway
+
+% - one needs to be careful with interop with F# -> API is stripped of refinements and nothing is checking if we call functions correctly from F# anymore – F* code was verified assuming a correct input would be passed)
+
+% - tactics (showing how F* represents syntax (and proofs?), how to do some code inspection/generation – mostly examples
+
+% - quotation and antiquotation – part of the above
+
+% .NET interop and known limitations:
+
+% - one can write any implementation of a function directly in F#, and F* will only verify other code against the interface, one can cheat heavily and easily shoot oneself in the foot
+
+% Proof engineering:
+
+% - Do not prove every detail manually – leave the work for SMT solver so that you have less fixing when you change something
+
+% - Use asserts to make sure important properties hold at the time where you expect them to be true
+
+% - Sliding admit technique (assume certain parts of the proof for debugging or to avoid building proofs from the bottom up)
 
 \begin{frame}{}
 \begin{itemize}
