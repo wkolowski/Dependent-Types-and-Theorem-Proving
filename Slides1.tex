@@ -11,9 +11,28 @@
 \frame{\titlepage}
 \frame{\tableofcontents}
 
-\section{Intro: greetings, prerequisites, learning outcomes, plan of lectures, F*}
-% The lectures are mostly aimed at people who know some F# and are comfortable
-% with pattern matching, recursion, algebraic data types etc.
+\section{Greetings}
+
+% TODO: greetings
+
+\begin{frame}{General info}
+\begin{itemize}
+	\item The lectures will be held weekly on Fridays.
+	\item Don't worry if you miss a lecture -- the slides are pretty massive and the talks are going to be recorded.
+	\item Each lecture ends with some exercises which will help you familiarize yourself with F* and better understand the ideas covered in the talk.
+	\item But you don't need to do them if you don't want to.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Plan of lectures}
+\begin{itemize}
+	\item Lecture 1: Programming with dependent types.
+	\item Lecture 2: Proving theorems with dependent types.
+	\item Lecture 3: Differences between programming and proving.
+	\item Lecture 4: Examples of bigger programs and longer proofs.
+	\item Lecture 5: A deeper dive into F*.
+\end{itemize}
+\end{frame}
 
 % Learning outcomes:
 % - after listening to the lectures people shouldn't be scared of dependent
@@ -21,6 +40,55 @@
 % - if additionally they do some exercises, they should end up pretty good at
 %   basic proving (up to quantifiers), but maybe still struggling with stuff
 %   like defining inductive predicates
+
+\begin{frame}{Learning outcomes}
+\begin{itemize}
+	\item You won't be scared of all those obscure, scary and mysterious names and notations.
+	\item You will get basic familiarity with the ideas behind dependent types.
+	\item You will begin to see logic and mathematics in a very different light, much closer to your day job (at least if you are a programmer working in F\#).
+	\item If you do the exercises, you will gain a basic proficiency in F*.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Introducing F* 1/2}
+\begin{itemize}
+	\item F* (pronounced ``eff star'') is a general-purpose purely functional programming language.
+	\item It comes from the ML family of languages. Its syntax most closely resembles that of F\#.
+	\item It is aimed at program verification, i.e. first you write a program and then you prove theorems which say that there are no bugs in the program. This will be covered in lecture 2.
+	\item It has traditional dependent types similar to those found in Coq, Agda, Lean or Idris. They are covered in lecture 1, i.e. today.
+	\item It also has refinement types, a different flavour of dependent types which is better suited for automatic theorem proving (traditional dependent types are more suited for ``manual'' proving). They are covered in lecture 1, i.e. today.
+	\item It has an effect system. This is a thing similar to what can be done with monads in Haskell. We will see it in lecture 3.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Introducing F* 1/2}
+\begin{itemize}
+	\item F* also has some more features which are unusual for functional languages, like mutable references and a weakest precondition calculus. These will be covered in lecture 5 or not at all.
+	\item F* is NOT a .NET language.
+	\item F* is neither compiled nor interpreted -- it is mostly a typechecker.
+	\item To run an F* program, it has to be extracted to some other language, like F\# or OCaml, and then compiled.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{F* ecosystem}
+\begin{itemize}
+	\item You can run F* inside your browser (and have a nice tutorial guide you): \url{http://www.fstar-lang.org/tutorial/}
+	\item Homepage: \url{http://www.fstar-lang.org/}
+	\item GitHub: \url{https://github.com/FStarLang/FStar}
+	\item Download: \url{http://www.fstar-lang.org/\#download}
+	\item Papers (not approachable for ordinary mortals): \url{http://www.fstar-lang.org/\#papers}
+	\item Talks/presentations (more approahcable): \url{http://www.fstar-lang.org/\#talks} (some of these are quite approachable if you're interested)  
+\end{itemize}
+\end{frame}
+
+% The lectures are mostly aimed at people who know some F# and are comfortable
+% with pattern matching, recursion, algebraic data types etc.
+
+\begin{frame}{Prerequisites}
+\begin{itemize}
+	\item 
+\end{itemize}
+\end{frame}
 
 \section{General idea}
 % A definition of dependent types (types that can depend on values) and an
@@ -118,11 +186,5 @@
 
 \section{Exercises}
 % No idea yet.
-
-\begin{frame}{}
-\begin{itemize}
-	\item 
-\end{itemize}
-\end{frame}
 
 \end{document}
