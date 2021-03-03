@@ -9,4 +9,5 @@
 *fdb_latexmk
 *vrb
 *.synctex(busy)
+*.synctex.gz
 _minted-Slides

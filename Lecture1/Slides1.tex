@@ -1,5 +1,7 @@
 \documentclass{beamer}
 
+\usepackage{xcolor}
+
 \title{Dependent Types and Theorem Proving: \\Introduction to Dependent Types}
 \author{Wojciech Kołowski}
 \date{March 2021}
@@ -50,34 +52,35 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Introducing F* 1/2}
+\begin{frame}{Introducing F*}
 \begin{itemize}
 	\item F* (pronounced ``eff star'') is a general-purpose purely functional programming language.
-	\item It comes from the ML family of languages. Its syntax most closely resembles that of F\#.
-	\item It is aimed at program verification, i.e. first you write a program and then you prove theorems which say that there are no bugs in the program. This will be covered in lecture 2.
-	\item It has traditional dependent types similar to those found in Coq, Agda, Lean or Idris. They are covered in lecture 1, i.e. today.
-	\item It also has refinement types, a different flavour of dependent types which is better suited for automatic theorem proving (traditional dependent types are more suited for ``manual'' proving). They are covered in lecture 1, i.e. today.
-	\item It has an effect system. This is a thing similar to what can be done with monads in Haskell. We will see it in lecture 3.
+	\item Member of the ML family, syntactically most similar to F\#.
+	\item Aimed at program verification.
+	\item Dependent types.
+	\item Refinement types.
+	\item Effect system.
+	\item Not a .NET language.
+	\item Neither compiled nor interpreted -- it's a proof assistant, i.e. just a typechecker.
+	\item To run a program, it has to be extracted to some other language, like F\#, OCaml, C or WASM, and then compiled.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Introducing F* 1/2}
-\begin{itemize}
-	\item F* also has some more features which are unusual for functional languages, like mutable references and a weakest precondition calculus. These will be covered in lecture 5 or not at all.
-	\item F* is NOT a .NET language.
-	\item F* is neither compiled nor interpreted -- it is mostly a typechecker.
-	\item To run an F* program, it has to be extracted to some other language, like F\# or OCaml, and then compiled.
-\end{itemize}
+\begin{frame}{Don't worry, be happy, ask lots of questions}
+\begin{center}
+	\color{red}
+	I KNOW YOU DIDN'T UNDERSTAND THE PREVIOUS SLIDE, BUT BY THE END OF THESE TALKS, YOU WILL -- AND THAT'S THE POINT!
+\end{center}
 \end{frame}
 
-\begin{frame}{F* ecosystem}
+\begin{frame}{Useful F* links}
 \begin{itemize}
 	\item You can run F* inside your browser (and have a nice tutorial guide you): \url{http://www.fstar-lang.org/tutorial/}
-	\item Homepage: \url{http://www.fstar-lang.org/}
 	\item GitHub: \url{https://github.com/FStarLang/FStar}
+	\item Homepage: \url{http://www.fstar-lang.org/}
 	\item Download: \url{http://www.fstar-lang.org/\#download}
 	\item Papers (not approachable for ordinary mortals): \url{http://www.fstar-lang.org/\#papers}
-	\item Talks/presentations (more approahcable): \url{http://www.fstar-lang.org/\#talks} (some of these are quite approachable if you're interested)  
+	\item Talks/presentations (more approachable): \url{http://www.fstar-lang.org/\#talks} (some of these are quite approachable if you're interested)  
 \end{itemize}
 \end{frame}
 
@@ -86,7 +89,14 @@
 
 \begin{frame}{Prerequisites}
 \begin{itemize}
-	\item 
+	\item To understand what we will be talking about, you should have a working knowledge of F\# and the basic concepts of functional programming, namely:
+	\item Functions as first-class citizens.
+	\item Higher-order functions.
+	\item Algebraic data types, including sum types and product types.
+	\item Pattern matching.
+	\item Recursion.
+	\item Even if you know these, you may be unfamiliar with the particular names -- for example, ``sum types'' is a name used in academia and Haskell, but in F\# they are better known as ``tagged unions''.
+	\item We will now see a snippet that shows how these things look in F*.
 \end{itemize}
 \end{frame}
 
@@ -94,7 +104,19 @@
 % A definition of dependent types (types that can depend on values) and an
 % example -- a good one would be the type of MxN matrices.
 
+\begin{frame}{}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	\end{frame}
+
 \section{First-class types}
+
+\begin{frame}{}
+\begin{itemize}
+	\item 
+\end{itemize}
+\end{frame}
 
 \subsection{What does ``first-class'' mean?}
 % Explain the notion of "first-class" using the (lack of) first class functions
@@ -103,23 +125,53 @@
 % Then introduce the universe of types. At this stage we will pretend that
 % Type : Type. Mentioning the universe hierarchy should be postponed to lecture 3.
 
+\begin{frame}{}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	\end{frame}
+
 \subsection{Computing with types}
 % Show that our functions can now juggle types the same way they can juggle
 % integers or strings.
 
 % Leading example: compute printf's type from format string.
 
+\begin{frame}{}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	\end{frame}
+
 \section{Dependent functions}
 % Introduce pi types by analogy with ordinary function type.
 % Always call it "dependent function type" and use F* notation
 % (i.e. (x : A) -> P x) to minimize confusion.
 
+\begin{frame}{}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	\end{frame}
+
 % Show some silly examples, like returning results of different types in
 % different if-branches. Maybe compare this to dynamic typing and underline
 % the differences.
 
+\begin{frame}{}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	\end{frame}
+
 \subsection{Example: typesafe printf}
 % Finish the typesafe printf example.
+
+\begin{frame}{}
+	\begin{itemize}
+		\item 
+	\end{itemize}
+	\end{frame}
 
 \subsection{How to express polymorphism}
 % Polymorphic functions are just dependent functions with Type arguments.
