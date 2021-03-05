@@ -2,6 +2,8 @@
 
 \usepackage{xcolor}
 
+\newcommand{\m}[1]{\texttt{#1}}
+
 \title{Dependent Types and Theorem Proving: \\Introduction to Dependent Types}
 \author{Wojciech Kołowski}
 \date{March 2021}
@@ -15,14 +17,13 @@
 
 \section{Greetings}
 
-% TODO: greetings
-
 \begin{frame}{General info}
 \begin{itemize}
 	\item The lectures will be held weekly on Fridays.
 	\item Don't worry if you miss a lecture -- the slides are pretty massive and the talks are going to be recorded.
 	\item Each lecture ends with some exercises which will help you familiarize yourself with F* and better understand the ideas covered in the talk.
 	\item But you don't need to do them if you don't want to.
+	\item This talks repo: \url{https://github.com/wkolowski/Dependent-Types-and-Theorem-Proving}
 \end{itemize}
 \end{frame}
 
@@ -35,13 +36,6 @@
 	\item Lecture 5: A deeper dive into F*.
 \end{itemize}
 \end{frame}
-
-% Learning outcomes:
-% - after listening to the lectures people shouldn't be scared of dependent
-%   types and formal proofs anymore
-% - if additionally they do some exercises, they should end up pretty good at
-%   basic proving (up to quantifiers), but maybe still struggling with stuff
-%   like defining inductive predicates
 
 \begin{frame}{Learning outcomes}
 \begin{itemize}
@@ -84,31 +78,61 @@
 \end{itemize}
 \end{frame}
 
-% The lectures are mostly aimed at people who know some F# and are comfortable
-% with pattern matching, recursion, algebraic data types etc.
-
 \begin{frame}{Prerequisites}
 \begin{itemize}
 	\item To understand what we will be talking about, you should have a working knowledge of F\# and the basic concepts of functional programming, namely:
-	\item Functions as first-class citizens.
-	\item Higher-order functions.
+	\item Functions as first-class citizens, including higher-order functions.
 	\item Algebraic data types, including sum types and product types.
-	\item Pattern matching.
-	\item Recursion.
+	\item Pattern matching and recursion.
 	\item Even if you know these, you may be unfamiliar with the particular names -- for example, ``sum types'' is a name used in academia and Haskell, but in F\# they are better known as ``tagged unions''.
-	\item We will now see a snippet that shows how the things above look in F* (see the file Prerequisites.fst).
+	\item We will now see some code that shows how these things look in F* (see the file \texttt{Lecture1/Prerequisites.fst}).
 \end{itemize}
 \end{frame}
 
-\section{General idea}
 % A definition of dependent types (types that can depend on values) and an
 % example -- a good one would be the type of MxN matrices.
+\section{General idea}
 
-\begin{frame}{}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-	\end{frame}
+\begin{frame}{Dependencies}
+\begin{itemize}
+	\item To understand dependent types, first we have to understand dependency. It's easiest to do this by listing the forms of dependency you are likely to be familiar with:
+	\item Values can depend on values: we can think that the sum \m{n + m} is a number that depends on the numbers \m{n} and \m{m}. This dependency can be expressed as a function: \m{fun (n m :\ int) -> n + m}.
+	\item Values can depend on types. For example, the identity function \m{fun (x :\ 'a) -> x} depends on the type \m{'a}.
+	\item Types can depend on types. For example, the F\# type \m{Set<'a>} depends on the type \m{'a}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naming the dependencies}
+\begin{itemize}
+	\item I bet you spotted the pattern in the previous slide, but it's also a good idea to name each kind of dependency.
+	\item Values can depend on values: (first-class) functions.
+	\item Values can depend on types: polymorphism (i.e. ``generics'').
+	\item Types can depend on types: type operators.
+	\item There's yet another kind of dependency, which is not present in F\#, but is present in F* and is the topic of this lecture.
+	\item Types can depend on values: dependent types.
+	\item But what are dependent types good for? You have been living your whole life without them, after all!
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Matrix multiplication}
+\begin{itemize}
+	\item We can only multiply matrices whose dimensions match, i.e. we can multiply an $n \times m$ matrix by a $m \times k$ and get an $n \times k$ matrix as a result.
+	\item How to model this in your favourite programming language without dependent types?
+	\item The best we can do is have a types of matrices \m{Matrix} and then matrix multiplication has type \m{matmult :\ Matrix -> Matrix -> Matrix}.
+	\item What happens when we call it with matrices of the wrong dimensions?
+	\item $\m{matmult} \begin{bmatrix}1 & 2\\3 & 4\end{bmatrix} \begin{bmatrix}1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 9\end{bmatrix}$ is well-typed, but will throw an \m{IllegalArgumentException} or some other kind of runtime error, or maybe it will crash even less gracefully.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Matrix multiplication with dependent types}
+\begin{itemize}
+	\item If our language supports dependent types, we can create a type of $n \times m$ matrices \m{Matrix n m}, which depends on \m{n} and \m{m}.
+	\item Then matrix multiplication can be given a precise type.
+	\item \m{matmult : (n m k :\ $\mathbb{N}$) -> Matrix n m -> Matrix m k -> Matrix n k}
+	\item Now \m{matmult} is a function which takes five arguments: the three matrix dimensions and the two matrices themselves. Note that \m{Matrix n m} and \m{Matrix m k} are possibly different types (when \m{n} is different from \m{k}) and that the dimensions must match.
+	\item Therefore, $\m{matmult} \begin{bmatrix}1 & 2\\3 & 4\end{bmatrix} \begin{bmatrix}1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 9\end{bmatrix}$ is not well-typed, because the first argument is of type \m{Matrix 2 2} and the second of type \m{Matrix 3 3}, but this means that \m{m} has to be equal to both \m{2} and \m{3} at the same time, which is impossible.
+\end{itemize}
+\end{frame}
 
 \section{First-class types}
 
@@ -125,53 +149,23 @@
 % Then introduce the universe of types. At this stage we will pretend that
 % Type : Type. Mentioning the universe hierarchy should be postponed to lecture 3.
 
-\begin{frame}{}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-	\end{frame}
-
 \subsection{Computing with types}
 % Show that our functions can now juggle types the same way they can juggle
 % integers or strings.
 
 % Leading example: compute printf's type from format string.
 
-\begin{frame}{}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-	\end{frame}
-
 \section{Dependent functions}
 % Introduce pi types by analogy with ordinary function type.
 % Always call it "dependent function type" and use F* notation
 % (i.e. (x : A) -> P x) to minimize confusion.
 
-\begin{frame}{}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-	\end{frame}
-
 % Show some silly examples, like returning results of different types in
 % different if-branches. Maybe compare this to dynamic typing and underline
 % the differences.
 
-\begin{frame}{}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-	\end{frame}
-
 \subsection{Example: typesafe printf}
 % Finish the typesafe printf example.
-
-\begin{frame}{}
-	\begin{itemize}
-		\item 
-	\end{itemize}
-	\end{frame}
 
 \subsection{How to express polymorphism}
 % Polymorphic functions are just dependent functions with Type arguments.

@@ -140,13 +140,13 @@ let uncurry (f : int * string * bool -> stuff') : int -> string -> bool -> stuff
 // Algebraic data types are sums of products in which the type being defined
 // can appear. Here the constructor Node takes as arguments two trees, i.e.
 // values of the type were defining.
-type tree =
-    | Empty : tree
-    | Node  : int -> tree -> tree -> tree
+type binaryTree =
+    | Empty : binaryTree
+    | Node  : int -> binaryTree -> binaryTree -> binaryTree
 
 // Algebraic data types are processed with pattern matching and recursion.
 // Remember about the keyword 'let rec'!
-let rec mirror (t : tree) : tree =
+let rec mirror (t : binaryTree) : binaryTree =
     match t with
     | Empty -> Empty
     | Node value left right -> Node value (mirror right) (mirror left)
