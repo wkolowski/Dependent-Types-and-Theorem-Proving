@@ -104,10 +104,15 @@
 
 \begin{frame}{Naming the dependencies}
 \begin{itemize}
-	\item I bet you spotted the pattern in the previous slide, but it's also a good idea to name each kind of dependency.
+	\item I bet you spotted the pattern in the previous slide, but it's a good idea to also have a name for the feature provided by each kind of dependency.
 	\item Values can depend on values: (first-class) functions.
 	\item Values can depend on types: polymorphism (i.e. ``generics'').
 	\item Types can depend on types: type operators.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dependent types}
+\begin{itemize}
 	\item There's yet another kind of dependency, which is not present in F\#, but is present in F* and is the topic of this lecture.
 	\item Types can depend on values: dependent types.
 	\item But what are dependent types good for? You have been living your whole life without them, after all!
@@ -117,8 +122,8 @@
 \begin{frame}{Matrix multiplication}
 \begin{itemize}
 	\item We can only multiply matrices whose dimensions match, i.e. we can multiply an $n \times m$ matrix by a $m \times k$ and get an $n \times k$ matrix as a result.
-	\item How to model this in your favourite programming language without dependent types?
-	\item The best we can do is have a types of matrices \m{Matrix} and then matrix multiplication has type \m{matmult :\ Matrix -> Matrix -> Matrix}.
+	\item How to model this in our favourite programming language without dependent types?
+	\item The best we can do is to have a types of matrices \m{Matrix} and then matrix multiplication has type \m{matmult :\ Matrix -> Matrix -> Matrix}.
 	\item What happens when we call it with matrices of the wrong dimensions?
 	\item $\m{matmult} \begin{bmatrix}1 & 2\\3 & 4\end{bmatrix} \begin{bmatrix}1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 9\end{bmatrix}$ is well-typed, but will throw an \m{IllegalArgumentException} or some other kind of runtime error, or maybe it will crash even less gracefully.
 \end{itemize}
@@ -126,11 +131,38 @@
 
 \begin{frame}{Matrix multiplication with dependent types}
 \begin{itemize}
-	\item If our language supports dependent types, we can create a type of $n \times m$ matrices \m{Matrix n m}, which depends on \m{n} and \m{m}.
-	\item Then matrix multiplication can be given a precise type.
-	\item \m{matmult : (n m k :\ $\mathbb{N}$) -> Matrix n m -> Matrix m k -> Matrix n k}
-	\item Now \m{matmult} is a function which takes five arguments: the three matrix dimensions and the two matrices themselves. Note that \m{Matrix n m} and \m{Matrix m k} are possibly different types (when \m{n} is different from \m{k}) and that the dimensions must match.
-	\item Therefore, $\m{matmult} \begin{bmatrix}1 & 2\\3 & 4\end{bmatrix} \begin{bmatrix}1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 9\end{bmatrix}$ is not well-typed, because the first argument is of type \m{Matrix 2 2} and the second of type \m{Matrix 3 3}, but this means that \m{m} has to be equal to both \m{2} and \m{3} at the same time, which is impossible.
+	\item In a language with dependent types we can create a type \m{Matrix n m} of $n \times m$ matrices and give multiplication the type \m{matmult : (n :\ $\mathbb{N}$) ->  (m :\ $\mathbb{N}$) -> (k :\ $\mathbb{N}$) -> Matrix n m -> Matrix m k -> Matrix n k}
+	\item Now \m{matmult} is a function which takes five arguments: the three matrix dimensions and the two matrices themselves.
+	\item After giving it the dimensions of the first matrix from the previous slide, \m{matmult 2 2} has type \m{(k :\ $\mathbb{N}$) -> Matrix 2 2 -> Matrix 2 3 -> Matrix 2 3}.
+	\item It is clear that \m{matmult 2 2 k} $\begin{bmatrix}1 & 2\\3 & 4\end{bmatrix} \begin{bmatrix}1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 9\end{bmatrix}$ is not well-typed for any \m{k}, because the last argument is of type \m{Matrix 3 3}, but an argument of type \m{Matrix 2 k} was expected.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Array access}
+\begin{itemize}
+	\item When accessing the $i$-th element of an array, $i$ must be smaller than the length of the array.
+	\item How to model this in our favourite programming language without dependent types?
+	\item We have a type \m{Array A} of arrays whose elements are of type \m{A} and we can access its elements with a function \m{get :\ Array A -> int -> A}.
+	\item What happens, when $i$ is greater than the length of the array? Or, what happens when $i$ is negative?
+	\item \m{get [| 'a'; 'b'; 'c' ] 5} is well-typed, but will throw an \m{IndexOutOfBoundsException} or result in a segmentation fault.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Array access with dependent types 1/2}
+\begin{itemize}
+	\item In a language with dependent types we can have a type \m{Array A n} of arrays holding elements of type \m{A} and whose length is the natural number \m{n}.
+	\item Then we have a few possibilities to model the type of \m{get}.
+	\item \m{get :\ (n :\ $\mathbb{N}$) -> Array A n -> (i :\ $\mathbb{N}$) -> i < n -> A}.
+	\item In this variant, the fourth argument of \m{get} is a proof that the index isn't out of bounds (we will cover proofs in the next lecture).
+	\item We can't prove \m{5 < 3}, so we don't have any proof to feed into \m{get 3 [| 'a'; 'b'; 'c' |] 5 :\ 5 < 3 -> Char}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Array access with dependent types 2/2}
+\begin{itemize}
+	\item \m{get :\ (n :\ $\mathbb{N}$) -> Array A n -> (i :\ $\mathbb{N}$\{i < n \}) -> A}.
+	\item In this variant we use refinement types (which we will cover later today) to automatically guarantee that \m{i} isn't out of bounds.
+	\item \m{get 3 [| 'a'; 'b'; 'c' |] 5} is not well-typed, because the typechecker can't prove \m{5 < 3}, and thus \m{5} is not of type \m{$\mathbb{N}$\{5 < 3\}}.
 \end{itemize}
 \end{frame}
 
