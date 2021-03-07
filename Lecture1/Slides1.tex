@@ -138,6 +138,15 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{A nice paper}
+\begin{itemize}
+	\item Dependent types can also be used to keep track of units of measure.
+	\item This is possible in F\# too, but it's a built-in feature of the compiler, whereas the dependently typed solution is much more principled.
+	\item It is also composable -- we can keep track of both matrix dimensions and units.
+	\item There's a nice paper about this: \textbf{Type systems for programs respecting dimensions} available at \url{https://fredriknf.com/papers/dimensions2021.pdf}
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Array access}
 \begin{itemize}
 	\item When accessing the $i$-th element of an array, $i$ must be smaller than the length of the array.
@@ -166,13 +175,26 @@
 \end{itemize}
 \end{frame}
 
-\section{First-class types}
-
-\begin{frame}{}
+\begin{frame}{Why should we care?}
 \begin{itemize}
-	\item 
+	\item Large software systems written in dynamically typed languages are hard to refactor, because all type checks occur at runtime.
+	\item Statically typed languages make the situation better, because they move these checks to compile time, making them much more likely to be useful.
+	\item But in simple functional languages like F\# there's still plenty of room for dynamic runtime checks -- array bounds checking, division by zero, and a lot of user-defined checks which throw exceptions in case of failure.
+	\item With dependent types, these can be eliminated, which results in even more refactorability and maintainability.
+	\item This is also a matter of performance -- no runtime checks means faster programs.
 \end{itemize}
 \end{frame}
+
+\begin{frame}{We're getting serious}
+\begin{itemize}
+	\item The above slides present nice fairy tales\dots
+	\item \dots but how do dependent types actually work?
+	\item And how to use them in F*?
+	\item And what can ordinary programmers use them for besides number crunching with matrices and arrays?
+\end{itemize}
+\end{frame}
+
+\section{First-class types}
 
 \subsection{What does ``first-class'' mean?}
 % Explain the notion of "first-class" using the (lack of) first class functions
@@ -180,6 +202,15 @@
 
 % Then introduce the universe of types. At this stage we will pretend that
 % Type : Type. Mentioning the universe hierarchy should be postponed to lecture 3.
+
+\begin{frame}{What does first-class means?}
+\begin{itemize}
+	\item In C, we can define functions that take an int and return an int.
+	\item But we can't define a function that takes a function from ints to ints and returns an int.
+	\item This means that functions from ints to ints are not treated the same as ints.
+	\item 
+\end{itemize}
+\end{frame}
 
 \subsection{Computing with types}
 % Show that our functions can now juggle types the same way they can juggle
