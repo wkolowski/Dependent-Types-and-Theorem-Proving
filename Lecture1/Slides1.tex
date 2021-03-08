@@ -203,12 +203,56 @@
 % Then introduce the universe of types. At this stage we will pretend that
 % Type : Type. Mentioning the universe hierarchy should be postponed to lecture 3.
 
-\begin{frame}{What does first-class means?}
+\begin{frame}{What does ``first-class mean?}
 \begin{itemize}
-	\item In C, we can define functions that take an int and return an int.
-	\item But we can't define a function that takes a function from ints to ints and returns an int.
-	\item This means that functions from ints to ints are not treated the same as ints.
+	\item In C, we can define functions that take an \m{int} and return an \m{int}.
+	\item But we can't define a function that takes a function from \m{int}s to \m{int}s and returns an \m{int}.
+	\item This means that functions from \m{int}s to \m{int}s are not treated the same as \m{ints}.
+	\item As far as C is concerned, we can say that \m{int}s are first-class, but functions are not first-class (thus, they are ``second-class'').
+\end{itemize}
+\end{frame}
+
+\begin{frame}{A first-class quiz}
+\begin{itemize}
+	\item The concept of ``first-class'' is neither precisely defined nor exact. Rather, it's more of a functional programming folklore that obeys the ``I know it when I see it'' principle.
+	\item So, we will have a little quiz to check if you get it right. Are the below language constructors first-class in F\# or not?
+	\item Functions?
+	\item Recursive functions?
+	\item Arrays?
+	\item Interfaces?
+	\item Records?
+	\item Modules?
+	\item Types?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{A type-based definition of ``first-class''}
+\begin{itemize}
+	\item I prefer to think about it this way.
+	\item A concept $C$ is first-class in some programming language if in that language there is, loosely speaking, a type of all $C$s.
+	\item This means that a language has first-class functions if for any two types $A$ and $B$ there is a type $A \to B$ of all functions from $A$ to $B$.
+	\item In C, that's not the case and this is why functions are not first-class  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Some helpers}
+\begin{itemize}
+	\item I you don't like the above characterization, you might use some other ones:
 	\item 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{A first-class quiz}
+\begin{itemize}
+	\item The concept of ``first-class'' is neither precisely defined nor exact. Rather, it's more of a functional programming folklore that obeys the ``I know it when I see it'' principle.
+	\item So, we will have a little quiz to check if you get it right. Are the below language constructors first-class in F\# or not?
+	\item Functions?
+	\item Recursive functions?
+	\item Arrays?
+	\item Interfaces?
+	\item Records?
+	\item Modules?
+	\item Types?
 \end{itemize}
 \end{frame}
 
