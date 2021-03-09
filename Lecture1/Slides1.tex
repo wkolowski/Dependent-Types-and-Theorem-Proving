@@ -185,6 +185,12 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{The general idea of dependent types}
+\begin{itemize}
+	\item Dependent types are types that can depend on values.
+\end{itemize}
+\end{frame}
+
 \begin{frame}{We're getting serious}
 \begin{itemize}
 	\item The above slides present nice fairy tales\dots
@@ -197,62 +203,77 @@
 \section{First-class types}
 
 \subsection{What does ``first-class'' mean?}
-% Explain the notion of "first-class" using the (lack of) first class functions
-% in C (and maybe something else) as an example.
-
 % Then introduce the universe of types. At this stage we will pretend that
 % Type : Type. Mentioning the universe hierarchy should be postponed to lecture 3.
 
-\begin{frame}{What does ``first-class mean?}
+\begin{frame}{What does ``first-class'' mean?}
 \begin{itemize}
 	\item In C, we can define functions that take an \m{int} and return an \m{int}.
 	\item But we can't define a function that takes a function from \m{int}s to \m{int}s and returns an \m{int}.
 	\item This means that functions from \m{int}s to \m{int}s are not treated the same as \m{ints}.
 	\item As far as C is concerned, we can say that \m{int}s are first-class, but functions are not first-class (thus, they are ``second-class'').
+	\item But C has function pointers, so you may be skeptical when I claim it doesn't have first-class functions.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Some heuristics for skeptics}
+\begin{itemize}
+	\item The concept of ``first-class'' is neither precisely defined nor exact. Rather, it's more of a functional programming folklore that obeys the ``I know it when I see it'' principle.
+	\item However there are some heuristics that can help you.
+	\item Something is first-class when it can be:
+	\item bound/assigned to variables.
+	\item stored in data structures.
+	\item passed to functions as an argument.
+	\item returned from functions.
+	\item constructed at runtime.
+	\item nameless, i.e. it can exist without giving it any name.
+	\item So, which of these is criteria is not fullfilled by function pointers?
 \end{itemize}
 \end{frame}
 
 \begin{frame}{A first-class quiz}
 \begin{itemize}
-	\item The concept of ``first-class'' is neither precisely defined nor exact. Rather, it's more of a functional programming folklore that obeys the ``I know it when I see it'' principle.
-	\item So, we will have a little quiz to check if you get it right. Are the below language constructors first-class in F\# or not?
+	\item Let's have a little quiz to check if you get it.
+	\item Are the below language features first-class in F\# or not? Try to think about it for up to a minute and write down your answer.
 	\item Functions?
 	\item Recursive functions?
 	\item Arrays?
-	\item Interfaces?
-	\item Records?
-	\item Modules?
 	\item Types?
+	\item Modules?
+	\item Records?
 \end{itemize}
 \end{frame}
 
 \begin{frame}{A type-based definition of ``first-class''}
 \begin{itemize}
-	\item I prefer to think about it this way.
+	\item Heuristics from previous slides are nice\dots
+	\item but I prefer to think about first-class-ness in a different way, which is better from the functional programming point of view.
 	\item A concept $C$ is first-class in some programming language if in that language there is, loosely speaking, a type of all $C$s.
 	\item This means that a language has first-class functions if for any two types $A$ and $B$ there is a type $A \to B$ of all functions from $A$ to $B$.
-	\item In C, that's not the case and this is why functions are not first-class  
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Some helpers}
+\begin{frame}{A first-class quiz again}
 \begin{itemize}
-	\item I you don't like the above characterization, you might use some other ones:
-	\item 
-\end{itemize}
-\end{frame}
-
-\begin{frame}{A first-class quiz}
-\begin{itemize}
-	\item The concept of ``first-class'' is neither precisely defined nor exact. Rather, it's more of a functional programming folklore that obeys the ``I know it when I see it'' principle.
-	\item So, we will have a little quiz to check if you get it right. Are the below language constructors first-class in F\# or not?
+	\item The same quiz again, but this time try to use the type-based definition of ``first-class''.
+	\item Are the below language features first-class in F\# or not? Try to think about it for up to a minute and write down your answer.
 	\item Functions?
 	\item Recursive functions?
 	\item Arrays?
-	\item Interfaces?
-	\item Records?
-	\item Modules?
 	\item Types?
+	\item Modules?
+	\item Records?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{A first-class quiz answers}
+\begin{itemize}
+	\color{green} \item Functions? \color{black} For any \m{'a} and \m{'b} there's a type of functions \m{'a -> 'b}.
+	\color{red} \item Recursive functions? \color{black} There's no separate type of recursive functions, even though there's a syntactic distinction between \m{let} and \m{let rec}!
+	\color{green} \item Arrays? \color{black} For any type \m{'a} there's a type of arrays, namely \m{array<'a>}.
+	\color{red} \item Types? \color{black} There are types in F\# and there are type variables \m{a'}, \m{b'}, \m{c'} etc., but we can't assign them any type!
+	\color{red} \item Modules? \color{black} Modules are not first-class, they have a whole separate world of their own.
+	\color{yellow}\item Records? \color{black} This one is mixed depending on how you understand it. On the one hand, for any kind of record you can imagine, there's a corresponding type. But on the other hand, there is no type of all record types.
 \end{itemize}
 \end{frame}
 
