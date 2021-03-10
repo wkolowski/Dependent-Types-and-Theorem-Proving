@@ -60,16 +60,16 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Don't worry, be happy, ask lots of questions}
+\begin{frame}{Don't worry, be happy, ask questions}
 \begin{center}
 	\color{red}
-	I KNOW YOU DIDN'T UNDERSTAND THE PREVIOUS SLIDE, BUT BY THE END OF THESE TALKS, YOU WILL -- AND THAT'S THE POINT!
+	I KNOW YOU DIDN'T UNDERSTAND THE PREVIOUS SLIDE, BUT BY THE END OF THESE TALKS, YOU WILL!
 \end{center}
 \end{frame}
 
 \begin{frame}{Useful F* links}
 \begin{itemize}
-	\item You can run F* inside your browser (and have a nice tutorial guide you): \url{http://www.fstar-lang.org/tutorial/}
+	\item \textbf{You can run F* inside your browser} (and have a nice tutorial guide you): \url{http://www.fstar-lang.org/tutorial/}
 	\item GitHub: \url{https://github.com/FStarLang/FStar}
 	\item Homepage: \url{http://www.fstar-lang.org/}
 	\item Download: \url{http://www.fstar-lang.org/\#download}
@@ -85,7 +85,13 @@
 	\item Algebraic data types, including sum types and product types.
 	\item Pattern matching and recursion.
 	\item Even if you know these, you may be unfamiliar with the particular names -- for example, ``sum types'' is a name used in academia and Haskell, but in F\# they are better known as ``tagged unions''.
-	\item We will now see some code that shows how these things look in F* (see the file \texttt{Lecture1/Prerequisites.fst}).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Code snippet no 1}
+\begin{itemize}
+	\item We will now see some code that shows how these things look in F*.
+	\item See the file \texttt{Lecture1/Prerequisites.fst}.
 \end{itemize}
 \end{frame}
 
@@ -93,29 +99,39 @@
 % example -- a good one would be the type of MxN matrices.
 \section{General idea}
 
+\begin{frame}{Values and types}
+\begin{itemize}
+	\item To understand dependent types, first we have to understand \textbf{dependency}.
+	\item And to understand dependency, we need to be aware of the distinction between \textbf{values} and \textbf{types}.
+	\item By \textbf{values}, we mean the bread-and-butter of programming: numbers, strings, arrays, lists, functions, etc.
+	\item It should be pretty obvious to you that in most languages, \textbf{types} are not of the same status as numbers or functions.
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Dependencies}
 \begin{itemize}
-	\item To understand dependent types, first we have to understand dependency. It's easiest to do this by listing the forms of dependency you are likely to be familiar with:
-	\item Values can depend on values: we can think that the sum \m{n + m} is a number that depends on the numbers \m{n} and \m{m}. This dependency can be expressed as a function: \m{fun (n m :\ int) -> n + m}.
-	\item Values can depend on types. For example, the identity function \m{fun (x :\ 'a) -> x} depends on the type \m{'a}.
-	\item Types can depend on types. For example, the F\# type \m{Set<'a>} depends on the type \m{'a}.
+	\item Dependency is easy to understand. In fact, if you know basic F\#, then you already know most of it, because in F\#:
+	\item \textbf{Values can depend on values}: we can think that the sum \m{n + m} is a number that depends on the numbers \m{n} and \m{m}. This dependency can be expressed as a function: \m{fun (n m :\ int) -> n + m}.
+	\item \textbf{Values can depend on types}: for example, the identity function \m{fun (x :\ 'a) -> x} depends on the type \m{'a}.
+	\item \textbf{Types can depend on types}: for example, the F\# type \m{Set<'a>} depends on the type \m{'a}.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Naming the dependencies}
 \begin{itemize}
 	\item I bet you spotted the pattern in the previous slide, but it's a good idea to also have a name for the feature provided by each kind of dependency.
-	\item Values can depend on values: (first-class) functions.
-	\item Values can depend on types: polymorphism (i.e. ``generics'').
-	\item Types can depend on types: type operators.
+	\item Values can depend on values: (first-class) \textbf{functions}.
+	\item Values can depend on types: \textbf{polymorphism} (i.e. ``generics'').
+	\item Types can depend on types: \textbf{type operators}.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Dependent types}
 \begin{itemize}
 	\item There's yet another kind of dependency, which is not present in F\#, but is present in F* and is the topic of this lecture.
-	\item Types can depend on values: dependent types.
+	\item \textbf{Types can depend on values}: \textbf{dependent types}.
 	\item But what are dependent types good for? You have been living your whole life without them, after all!
+	\item Before we go on to explain dependent types, let's see some examples.
 \end{itemize}
 \end{frame}
 
@@ -123,18 +139,18 @@
 \begin{itemize}
 	\item We can only multiply matrices whose dimensions match, i.e. we can multiply an $n \times m$ matrix by a $m \times k$ and get an $n \times k$ matrix as a result.
 	\item How to model this in our favourite programming language without dependent types?
-	\item The best we can do is to have a types of matrices \m{Matrix} and then matrix multiplication has type \m{matmult :\ Matrix -> Matrix -> Matrix}.
+	\item The best we can do is to have \textbf{a type of matrices} \m{Matrix} and then matrix multiplication has type \m{matmult :\ Matrix -> Matrix -> Matrix}.
 	\item What happens when we call it with matrices of the wrong dimensions?
-	\item $\m{matmult} \begin{bmatrix}1 & 2\\3 & 4\end{bmatrix} \begin{bmatrix}1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 9\end{bmatrix}$ is well-typed, but will throw an \m{IllegalArgumentException} or some other kind of runtime error, or maybe it will crash even less gracefully.
+	\item $\m{matmult} \begin{bmatrix}1 & 2\\3 & 4\end{bmatrix} \begin{bmatrix}1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 9\end{bmatrix}$ \textbf{is well-typed, but will throw} an \m{IllegalArgumentException} or some other kind of runtime error, or maybe it will crash even less gracefully.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Matrix multiplication with dependent types}
 \begin{itemize}
-	\item In a language with dependent types we can create a type \m{Matrix n m} of $n \times m$ matrices and give multiplication the type \m{matmult : (n :\ $\mathbb{N}$) ->  (m :\ $\mathbb{N}$) -> (k :\ $\mathbb{N}$) -> Matrix n m -> Matrix m k -> Matrix n k}
+	\item In a language with dependent types we can create \textbf{a type of $n \times m$ matrices} \m{Matrix n m} and give multiplication the type \m{matmult : (n :\ $\mathbb{N}$) ->  (m :\ $\mathbb{N}$) -> (k :\ $\mathbb{N}$) -> Matrix n m -> Matrix m k -> Matrix n k}
 	\item Now \m{matmult} is a function which takes five arguments: the three matrix dimensions and the two matrices themselves.
 	\item After giving it the dimensions of the first matrix from the previous slide, \m{matmult 2 2} has type \m{(k :\ $\mathbb{N}$) -> Matrix 2 2 -> Matrix 2 3 -> Matrix 2 3}.
-	\item It is clear that \m{matmult 2 2 k} $\begin{bmatrix}1 & 2\\3 & 4\end{bmatrix} \begin{bmatrix}1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 9\end{bmatrix}$ is not well-typed for any \m{k}, because the last argument is of type \m{Matrix 3 3}, but an argument of type \m{Matrix 2 k} was expected.
+	\item It is clear that \m{matmult 2 2 k} $\begin{bmatrix}1 & 2\\3 & 4\end{bmatrix} \begin{bmatrix}1 & 2 & 3\\4 & 5 & 6\\7 & 8 & 9\end{bmatrix}$ \textbf{is not well-typed} for any \m{k}, because the last argument is of type \m{Matrix 3 3}, but an argument of type \m{Matrix 2 k} was expected.
 \end{itemize}
 \end{frame}
 
@@ -151,7 +167,7 @@
 \begin{itemize}
 	\item When accessing the $i$-th element of an array, $i$ must be smaller than the length of the array.
 	\item How to model this in our favourite programming language without dependent types?
-	\item We have a type \m{Array A} of arrays whose elements are of type \m{A} and we can access its elements with a function \m{get :\ Array A -> int -> A}.
+	\item We have \m{Array A}, \textbf{the type of arrays of \m{A}s}, and we can access its elements with a function \m{get :\ Array A -> int -> A}.
 	\item What happens, when $i$ is greater than the length of the array? Or, what happens when $i$ is negative?
 	\item \m{get [| 'a'; 'b'; 'c' ] 5} is well-typed, but will throw an \m{IndexOutOfBoundsException} or result in a segmentation fault.
 \end{itemize}
@@ -159,7 +175,7 @@
 
 \begin{frame}{Array access with dependent types 1/2}
 \begin{itemize}
-	\item In a language with dependent types we can have a type \m{Array A n} of arrays holding elements of type \m{A} and whose length is the natural number \m{n}.
+	\item In a language with dependent types we can have \m{Array A n}, \textbf{the type of arrays of \m{A}s whose length is \m{n}}.
 	\item Then we have a few possibilities to model the type of \m{get}.
 	\item \m{get :\ (n :\ $\mathbb{N}$) -> Array A n -> (i :\ $\mathbb{N}$) -> i < n -> A}.
 	\item In this variant, the fourth argument of \m{get} is a proof that the index isn't out of bounds (we will cover proofs in the next lecture).
@@ -180,14 +196,14 @@
 	\item Large software systems written in dynamically typed languages are hard to refactor, because all type checks occur at runtime.
 	\item Statically typed languages make the situation better, because they move these checks to compile time, making them much more likely to be useful.
 	\item But in simple functional languages like F\# there's still plenty of room for dynamic runtime checks -- array bounds checking, division by zero, and a lot of user-defined checks which throw exceptions in case of failure.
-	\item With dependent types, these can be eliminated, which results in even more refactorability and maintainability.
-	\item This is also a matter of performance -- no runtime checks means faster programs.
+	\item With dependent types, these can be eliminated, which results in \textbf{even more refactorability and maintainability}.
+	\item This is also a matter of performance -- \textbf{no runtime checks means faster programs}.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{The general idea of dependent types}
+\begin{frame}{The running summary 1}
 \begin{itemize}
-	\item Dependent types are types that can depend on values.
+	\item \textbf{Dependent types are types that can depend on values}.
 \end{itemize}
 \end{frame}
 
@@ -206,6 +222,34 @@
 % Then introduce the universe of types. At this stage we will pretend that
 % Type : Type. Mentioning the universe hierarchy should be postponed to lecture 3.
 
+\begin{frame}{Juggling dependencies}
+\begin{itemize}
+	\item Given a functional language like F\#, how to enable types to depend on values?
+	\item Of course we want to retain the other kinds of dependencies (values on values, values on types, types on types).
+	\item It turns out it's best \textbf{throw away all kinds of dependencies besides the basic one} (values on values)\dots
+	\item \dots and then \textbf{turn types into values}!
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Values and types}
+\begin{itemize}
+	\item So now values encompass both old, ordinary values (integers, tuples, functions, etc.) and new values (types).
+	\item This way we get all four kinds of dependencies:
+	\item Ordinary values can depend on ordinary values.
+	\item Ordinary values can depend on type values.
+	\item Type values can depend on type values.
+	\item Type values can depend on ordinary values.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{First-class types}
+\begin{itemize}
+	\item In other words, we want to blur the distinction between values and types.
+	\item In yet other words, we want to \textbf{make types first-class citizens of our programming language}.
+	\item But what does ``first-class'' mean?
+\end{itemize}
+\end{frame}
+
 \begin{frame}{What does ``first-class'' mean?}
 \begin{itemize}
 	\item In C, we can define functions that take an \m{int} and return an \m{int}.
@@ -215,8 +259,8 @@
 	\item But C has function pointers, so you may be skeptical when I claim it doesn't have first-class functions.
 \end{itemize}
 \end{frame}
-
-\begin{frame}{Some heuristics for skeptics}
+	
+\begin{frame}{Some heuristics}
 \begin{itemize}
 	\item The concept of ``first-class'' is neither precisely defined nor exact. Rather, it's more of a functional programming folklore that obeys the ``I know it when I see it'' principle.
 	\item However there are some heuristics that can help you.
@@ -227,7 +271,7 @@
 	\item returned from functions.
 	\item constructed at runtime.
 	\item nameless, i.e. it can exist without giving it any name.
-	\item So, which of these is criteria is not fullfilled by function pointers?
+	\item So, which of these is criteria is not fullfilled by C's function pointers?
 \end{itemize}
 \end{frame}
 
@@ -277,9 +321,23 @@
 \end{itemize}
 \end{frame}
 
-\subsection{Computing with types}
-% Show that our functions can now juggle types the same way they can juggle
-% integers or strings.
+\begin{frame}{Computing with first-class types}
+\begin{itemize}
+	\item Previously we learned that ``making $X$ first-class'' means adding a type of all $X$s.
+	\item For types, this means that we need to have a \textbf{type of types}.
+	\item And that's it -- we don't need anything else.
+	\item Because types are first-class in F*, we can assign them to variables, pass them to functions as arguments and return them from functions, and even compute types by recursion.
+	\item It might a bit difficult to wrap your head around this idea, so let's see how it looks in F*.
+	\item The code snippet can be found in \m{Lecture1/FirstClassTypes.fst}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The running summary 2}
+\begin{itemize}
+	\item Dependent types are types that can depend on values.
+	\color{red} \item 
+\end{itemize}
+\end{frame}
 
 % Leading example: compute printf's type from format string.
 
