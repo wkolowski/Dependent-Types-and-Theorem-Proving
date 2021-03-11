@@ -244,9 +244,9 @@
 
 \begin{frame}{First-class types}
 \begin{itemize}
-	\item In other words, we want to blur the distinction between values and types.
-	\item In yet other words, we want to \textbf{make types first-class citizens of our programming language}.
-	\item But what does ``first-class'' mean?
+	\item How do we turn types into values?
+	\item In programming languages' parlance, this process is called \textbf{making types first-class citizens of the language}.
+	\item But what does ``first-class'' mean, anyway?
 \end{itemize}
 \end{frame}
 
@@ -255,16 +255,16 @@
 	\item In C, we can define functions that take an \m{int} and return an \m{int}.
 	\item But we can't define a function that takes a function from \m{int}s to \m{int}s and returns an \m{int}.
 	\item This means that functions from \m{int}s to \m{int}s are not treated the same as \m{ints}.
-	\item As far as C is concerned, we can say that \m{int}s are first-class, but functions are not first-class (thus, they are ``second-class'').
+	\item As far as C is concerned, we can say that \textbf{integers are first-class, but functions are not first-class} (thus, they are ``second-class'').
 	\item But C has function pointers, so you may be skeptical when I claim it doesn't have first-class functions.
 \end{itemize}
 \end{frame}
 	
 \begin{frame}{Some heuristics}
 \begin{itemize}
-	\item The concept of ``first-class'' is neither precisely defined nor exact. Rather, it's more of a functional programming folklore that obeys the ``I know it when I see it'' principle.
+	\item \textbf{The concept of ``first-class'' is neither precisely defined nor exact}. Rather, it's more of a functional programming folklore that obeys the ``I know it when I see it'' principle.
 	\item However there are some heuristics that can help you.
-	\item Something is first-class when it can be:
+	\item \textbf{Something is first-class when it can be}:
 	\item bound/assigned to variables.
 	\item stored in data structures.
 	\item passed to functions as an argument.
@@ -278,13 +278,13 @@
 \begin{frame}{A first-class quiz}
 \begin{itemize}
 	\item Let's have a little quiz to check if you get it.
-	\item Are the below language features first-class in F\# or not? Try to think about it for up to a minute and write down your answer.
+	\item \textbf{Are the below language features first-class in F\# or not?}
 	\item Functions?
 	\item Recursive functions?
 	\item Arrays?
-	\item Types?
 	\item Modules?
 	\item Records?
+	\item Types?
 \end{itemize}
 \end{frame}
 
@@ -292,21 +292,21 @@
 \begin{itemize}
 	\item Heuristics from previous slides are nice\dots
 	\item but I prefer to think about first-class-ness in a different way, which is better from the functional programming point of view.
-	\item A concept $C$ is first-class in some programming language if in that language there is, loosely speaking, a type of all $C$s.
+	\item For a given programming, \textbf{a concept $X$ is first-class if there is a type of all $X$s}, loosely speaking.
 	\item This means that a language has first-class functions if for any two types $A$ and $B$ there is a type $A \to B$ of all functions from $A$ to $B$.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{A first-class quiz again}
+\begin{frame}{A first-class quiz}
 \begin{itemize}
-	\item The same quiz again, but this time try to use the type-based definition of ``first-class''.
-	\item Are the below language features first-class in F\# or not? Try to think about it for up to a minute and write down your answer.
+	\item Let's have a little quiz to check if you get it.
+	\item \textbf{Are the below language features first-class in F\# or not?}
 	\item Functions?
 	\item Recursive functions?
 	\item Arrays?
-	\item Types?
 	\item Modules?
 	\item Records?
+	\item Types?
 \end{itemize}
 \end{frame}
 
@@ -315,19 +315,25 @@
 	\color{green} \item Functions? \color{black} For any \m{'a} and \m{'b} there's a type of functions \m{'a -> 'b}.
 	\color{red} \item Recursive functions? \color{black} There's no separate type of recursive functions, even though there's a syntactic distinction between \m{let} and \m{let rec}!
 	\color{green} \item Arrays? \color{black} For any type \m{'a} there's a type of arrays, namely \m{array<'a>}.
-	\color{red} \item Types? \color{black} There are types in F\# and there are type variables \m{a'}, \m{b'}, \m{c'} etc., but we can't assign them any type!
-	\color{red} \item Modules? \color{black} Modules are not first-class, they have a whole separate world of their own.
+	\color{red} \item Modules? \color{black} Modules don't have types, they have signatures. But signatures are not types, so modules are not first-class.
 	\color{yellow}\item Records? \color{black} This one is mixed depending on how you understand it. On the one hand, for any kind of record you can imagine, there's a corresponding type. But on the other hand, there is no type of all record types.
+	\color{red} \item Types? \color{black} There are types in F\# and there are type variables \m{a'}, \m{b'}, \m{c'} etc., but we can't assign them any type!
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Computing with first-class types}
 \begin{itemize}
-	\item Previously we learned that ``making $X$ first-class'' means adding a type of all $X$s.
+	\item Previously we learned that ``$X$ is first-class'' means that there is a type of all $X$s.
 	\item For types, this means that we need to have a \textbf{type of types}.
 	\item And that's it -- we don't need anything else.
+	\item Note: the phrase ``types of types'' sounds (and looks) bad, so we will call it \textbf{the universe of types}, or in short, just \textbf{the universe}.
 	\item Because types are first-class in F*, we can assign them to variables, pass them to functions as arguments and return them from functions, and even compute types by recursion.
-	\item It might a bit difficult to wrap your head around this idea, so let's see how it looks in F*.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Code snippet no 2}
+\begin{itemize}
+	\item It might a bit difficult to wrap your head around the idea of first-class types, so let's see how it plays out in F*.
 	\item The code snippet can be found in \m{Lecture1/FirstClassTypes.fst}
 \end{itemize}
 \end{frame}
@@ -335,9 +341,13 @@
 \begin{frame}{The running summary 2}
 \begin{itemize}
 	\item Dependent types are types that can depend on values.
-	\color{red} \item 
+	\item \textbf{To allow this kind of dependency, we need a universe -- a type whose elements are types themselves}.
 \end{itemize}
 \end{frame}
+
+\subsection{How to express polymorphism}
+% Polymorphic functions are just dependent functions with Type arguments.
+% Mention how this relates to type constructors, i.e. list : Type -> Type.
 
 % Leading example: compute printf's type from format string.
 
@@ -352,10 +362,6 @@
 
 \subsection{Example: typesafe printf}
 % Finish the typesafe printf example.
-
-\subsection{How to express polymorphism}
-% Polymorphic functions are just dependent functions with Type arguments.
-% Mention how this relates to type constructors, i.e. list : Type -> Type.
 
 \subsection{Implicit arguments and how to read function signatures}
 % Mention that with dependent types, we can infer some arguments from
