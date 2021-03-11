@@ -95,8 +95,6 @@
 \end{itemize}
 \end{frame}
 
-% A definition of dependent types (types that can depend on values) and an
-% example -- a good one would be the type of MxN matrices.
 \section{General idea}
 
 \begin{frame}{Values and types}
@@ -219,8 +217,6 @@
 \section{First-class types}
 
 \subsection{What does ``first-class'' mean?}
-% Then introduce the universe of types. At this stage we will pretend that
-% Type : Type. Mentioning the universe hierarchy should be postponed to lecture 3.
 
 \begin{frame}{Juggling dependencies}
 \begin{itemize}
@@ -341,15 +337,18 @@
 \begin{frame}{The running summary 2}
 \begin{itemize}
 	\item Dependent types are types that can depend on values.
-	\item \textbf{To allow this kind of dependency, we need a universe -- a type whose elements are types themselves}.
+	\item \textbf{In dependently typed languages there is a universe -- a type whose elements are themselves types}.
 \end{itemize}
 \end{frame}
 
-\subsection{How to express polymorphism}
-% Polymorphic functions are just dependent functions with Type arguments.
-% Mention how this relates to type constructors, i.e. list : Type -> Type.
-
-% Leading example: compute printf's type from format string.
+\begin{frame}{So far so good}
+\begin{itemize}
+	\item So far so good, but we still don't know how dependent types work.
+	\item We saw some in the examples, but they were left unexplained.
+	\item We also saw some more in the last code snippet, but those were the crudest and most primitive dependent types in existence.
+	\item \textbf{Now that we have learned about first-class types and the universe of types, we can learn dependent types proper}.
+\end{itemize}
+\end{frame}
 
 \section{Dependent functions}
 % Introduce pi types by analogy with ordinary function type.
@@ -360,14 +359,65 @@
 % different if-branches. Maybe compare this to dynamic typing and underline
 % the differences.
 
-\subsection{Example: typesafe printf}
-% Finish the typesafe printf example.
+\begin{frame}{Dependent types by analogy}
+\begin{itemize}
+	\item We will introduce dependent types by analogy.
+	\item \textbf{Each of the various kinds of dependent types out there is just a generalization of an ordinary non-dependent type that is well-known to functional programmers}:
+	\item Dependent function types are a generalization of function types.
+	\item Dependent pair types are a generalization of products.
+	\item Dependent record types are a generalization of records.
+	\item Inductive types are a generalization of algebraic data types.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Type families}
+\begin{itemize}
+	\item In the coming slides, we will often refer to \textbf{type families}.
+	\item \textbf{A family of types indexed by type \m{a}} is just a function \m{a -> Type}.
+	\item There can be many indices, like in \m{a -> b -> Type}.
+	\item We have already seen examples in the last code snippet:
+	\item \m{vec :\ Type -> nat -> Type} is the family of types whose members \m{vec A n} are lists of length \m{n} and elements of type \m{a}
+	\item \m{matrix :\ Type -> nat -> nat -> Type} is the family of types whose members \m{matrix a n m} are $n \times m$ matrices with entries of type \m{A}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Non-dependent functions}
+\begin{itemize}
+	\item Recall how ordinary function types work in F\#.
+	\item If \m{a :\ Type} is a type and \m{b :\ Type} is a type, then there is a type \m{a -> b :\ Type} of functions that take an element of \m{a} and return an element of \m{b}.
+	\item We create functions of type \m{a -> b} by writing \m{fun (x : a) -> e} where \m{e} is an expression of type \m{b} in which \m{x} may occur.
+	\item If we have a function \m{f :\ a -> b} and \m{x :\ a}, then we we can apply \m{f} to \m{x}, written \m{f x}, to get an element of type \m{b}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dependent functions}
+\begin{itemize}
+	\item Now, watch the analogy unfold\dots
+	\item If \m{a :\ Type} is a type and \textbf{\m{b :\ a -> Type} is a family of types}, then there is a type \textbf{\m{(x :\ a) -> b x} of dependent functions} which take an element of \m{a} \textbf{named \m{x}} and return an element of \m{b x}.
+	\item We create functions of type \m{(x :\ a) -> b x} by writing \m{fun (x :\ a) -> e} where \m{e} is an expression of type \m{b x} in which \m{x} may occur.
+	\item If we have a function \m{f :\ (x :\ a) -> b x} and \m{x :\ a}, then we can apply \m{f} to \m{x}, written \m{f x}, to get an element of type \m{b x}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Code snippet no 3 - dependent functions in F*}
+\begin{itemize}
+	\item Let's see how it works in practice.
+	\item See the code snippet \m{Lecture1/DependentFunctions.fst}
+\end{itemize}
+\end{frame}
+
+% TODO: how to express polymorphism
 
 \subsection{Implicit arguments and how to read function signatures}
 % Mention that with dependent types, we can infer some arguments from
 % the types of others, so we don't want to explicitly write all arguments.
 
-\section{Dependent pairs}
+\subsection{Example: typesafe printf}
+% Finish the typesafe printf example.
+
+
+
+\section{Dependent pairs and records}
 % Introduce sigma types by analogy with ordinary products.
 % Always call it "dependent pair type" and use F* notation
 % (i.e. (x : A) * P x) to minimize confusion.

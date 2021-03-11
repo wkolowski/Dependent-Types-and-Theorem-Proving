@@ -9,7 +9,7 @@ module DontWorryBeHappy
 
 // Definitions.
 
-// We can make definitions usingwith 'let'.
+// We can make definitions using 'let'.
 let x = 5
 
 // Type annotations are optional unless the type is too complicated to infer.
