@@ -3,6 +3,7 @@
 \usepackage{xcolor}
 
 \newcommand{\m}[1]{\texttt{#1}}
+\newcommand{\e}[1]{\textbf{#1}}
 
 \title{Dependent Types and Theorem Proving: \\Introduction to Dependent Types}
 \author{Wojciech Kołowski}
@@ -88,7 +89,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Code snippet no 1}
+\begin{frame}{Code snippet no 1 - basics of F*}
 \begin{itemize}
 	\item We will now see some code that shows how these things look in F*.
 	\item See the file \texttt{Lecture1/Prerequisites.fst}.
@@ -327,7 +328,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Code snippet no 2}
+\begin{frame}{Code snippet no 2 - first-class types in F*}
 \begin{itemize}
 	\item It might a bit difficult to wrap your head around the idea of first-class types, so let's see how it plays out in F*.
 	\item The code snippet can be found in \m{Lecture1/FirstClassTypes.fst}
@@ -376,8 +377,8 @@
 	\item \textbf{A family of types indexed by type \m{a}} is just a function \m{a -> Type}.
 	\item There can be many indices, like in \m{a -> b -> Type}.
 	\item We have already seen examples in the last code snippet:
-	\item \m{vec :\ Type -> nat -> Type} is the family of types whose members \m{vec A n} are lists of length \m{n} and elements of type \m{a}
-	\item \m{matrix :\ Type -> nat -> nat -> Type} is the family of types whose members \m{matrix a n m} are $n \times m$ matrices with entries of type \m{A}.
+	\item \m{vec :\ Type -> nat -> Type} is a family of types whose members \m{vec A n} are lists of length \m{n} and elements of type \m{a}
+	\item \m{matrix :\ Type -> nat -> nat -> Type} is a family of types whose members \m{matrix a n m} are $n \times m$ matrices with entries of type \m{A}.
 \end{itemize}
 \end{frame}
 
@@ -385,7 +386,7 @@
 \begin{itemize}
 	\item Recall how ordinary function types work in F\#.
 	\item If \m{a :\ Type} is a type and \m{b :\ Type} is a type, then there is a type \m{a -> b :\ Type} of functions that take an element of \m{a} and return an element of \m{b}.
-	\item We create functions of type \m{a -> b} by writing \m{fun (x : a) -> e} where \m{e} is an expression of type \m{b} in which \m{x} may occur.
+	\item We create functions of type \m{a -> b} by writing \m{fun (x :\ a) -> e} where \m{e} is an expression of type \m{b} in which \m{x} may occur.
 	\item If we have a function \m{f :\ a -> b} and \m{x :\ a}, then we we can apply \m{f} to \m{x}, written \m{f x}, to get an element of type \m{b}.
 \end{itemize}
 \end{frame}
@@ -396,6 +397,7 @@
 	\item If \m{a :\ Type} is a type and \textbf{\m{b :\ a -> Type} is a family of types}, then there is a type \textbf{\m{(x :\ a) -> b x} of dependent functions} which take an element of \m{a} \textbf{named \m{x}} and return an element of \m{b x}.
 	\item We create functions of type \m{(x :\ a) -> b x} by writing \m{fun (x :\ a) -> e} where \m{e} is an expression of type \m{b x} in which \m{x} may occur.
 	\item If we have a function \m{f :\ (x :\ a) -> b x} and \m{x :\ a}, then we can apply \m{f} to \m{x}, written \m{f x}, to get an element of type \m{b x}.
+	\item Hint: it's probably easiest to pronounce \m{(x :\ a) -> b x} as ``for all \m{x} of type \m{a}, \m{b} of \m{x}''. Thus is revealed the connection to logic, which we will see in the next lecture.
 \end{itemize}
 \end{frame}
 
@@ -406,17 +408,6 @@
 \end{itemize}
 \end{frame}
 
-% TODO: how to express polymorphism
-
-\subsection{Implicit arguments and how to read function signatures}
-% Mention that with dependent types, we can infer some arguments from
-% the types of others, so we don't want to explicitly write all arguments.
-
-\subsection{Example: typesafe printf}
-% Finish the typesafe printf example.
-
-
-
 \section{Dependent pairs and records}
 % Introduce sigma types by analogy with ordinary products.
 % Always call it "dependent pair type" and use F* notation
@@ -425,6 +416,28 @@
 \subsection{Example: everybody loves filling forms}
 % An example, something along the lines of how to use dependent pairs
 % to avoid forms with "not applicable" fields.
+
+
+
+\begin{frame}{Non-dependent pairs}
+\begin{itemize}
+	\item Recall how ordinary pairs work in F\#.
+	\item If \m{a :\ Type} is a type and \m{b :\ Type} is a type, then there is a type \m{a * b :\ Type} of pairs.
+	\item To create a pair, we write \m{(x, y)} where \m{x} is of type \m{a} and \m{y} is of type \m{b}.
+	\item To use a pair \m{p :\ a * b}, we use projections -- we have \m{fst p :\ a} and \m{snd p :\ b}.
+	\item We can also pattern match on pairs.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dependent pairs}
+\begin{itemize}
+	\item Now, watch the analogy unfold\dots
+	\item If \m{a :\ Type} is a type and \textbf{\m{b :\ a -> Type} is a family of types}, then there is \textbf{a type \m{(x :\ a) * b x :\ Type} of dependent pairs}.
+	\item To create a dependent pair, we write \m{(x, y)} where \m{x} is of type \m{a} and \textbf{\m{y} is of type \m{b x}}.
+	\item To use a pair \m{p :\ (x :\ a) * b x}, we use projections -- we have \m{fst p :\ a} \textbf{and \m{snd p :\ b (fst p)}}.
+	\item We can also pattern match on dependent pairs.
+\end{itemize}
+\end{frame}
 
 \section{Optional: some arithmetic}
 % An optional section.
