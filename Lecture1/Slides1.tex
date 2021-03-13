@@ -408,6 +408,14 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{The running summary 3}
+\begin{itemize}
+	\item Dependent types are types that can depend on values.
+	\item In dependently typed languages there is a universe -- a type whose elements are themselves types.
+	\item \textbf{There is a type of dependent functions which are just like ordinary functions, but their output TYPE can depend on the VALUE of their input}.
+\end{itemize}
+\end{frame}
+
 \section{Dependent pairs and records}
 % Introduce sigma types by analogy with ordinary products.
 % Always call it "dependent pair type" and use F* notation
@@ -451,6 +459,13 @@
 % Introduce the pi notation for dependent function types.
 % Explain it by parallels with math's pi notation for
 % multiplication. Introduce the name "dependent product (type)".
+
+\begin{frame}{Dependent products, Pi type and multiplication}
+\begin{itemize}
+	\item The dependent function type also goes by two other names: \textbf{the dependent product type and the Pi type}.
+	\item \textbf{There's also a different notation}: \m{(x :\ a) -> b x} is sometimes written as $\displaystyle \prod x :\ a, b(x)$ or $\displaystyle \prod_{x :\ a} b(x)$ or similar.
+\end{itemize}
+\end{frame}
 
 \subsection{Plus, cross and arrow}
 % Explain that dependent pair types are a generalization of
