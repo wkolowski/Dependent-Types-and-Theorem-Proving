@@ -338,7 +338,8 @@
 \begin{frame}{The running summary 2}
 \begin{itemize}
 	\item Dependent types are types that can depend on values.
-	\item \textbf{In dependently typed languages there is a universe -- a type whose elements are themselves types}.
+	\item \textbf{In dependently typed languages:}
+	\item \textbf{There is a universe -- a type whose elements are themselves types}.
 \end{itemize}
 \end{frame}
 
@@ -351,14 +352,7 @@
 \end{itemize}
 \end{frame}
 
-\section{Dependent functions}
-% Introduce pi types by analogy with ordinary function type.
-% Always call it "dependent function type" and use F* notation
-% (i.e. (x : A) -> P x) to minimize confusion.
-
-% Show some silly examples, like returning results of different types in
-% different if-branches. Maybe compare this to dynamic typing and underline
-% the differences.
+\section{Functions}
 
 \begin{frame}{Dependent types by analogy}
 \begin{itemize}
@@ -401,9 +395,21 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{More dependent functions}
+\begin{itemize}
+	\item Of course, we can iterate the dependent function type to get a type of functions whose output type dependent on the value of many inputs.
+	\item \m{(x :\ a) -> b x}
+	\item \m{(x :\ a) -> ((y :\ b x) -> c x y)}
+	\item Dependent function type associates to the right, just like ordinary function type, so we can drop the parentheses. We can also drop all but the last arrow.
+	\item \m{(x :\ a) (y :\ b x) (z :\ c x y) -> d x y z}
+	\item \m{(x :\ a) (y :\ b x) (z :\ c x y) (w : d x y z) -> e x y z w}
+	\item etc.
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Code snippet no 3 - dependent functions in F*}
 \begin{itemize}
-	\item Let's see how it works in practice.
+	\item Let's see how to use dependent functions in F*.
 	\item See the code snippet \m{Lecture1/DependentFunctions.fst}
 \end{itemize}
 \end{frame}
@@ -411,21 +417,13 @@
 \begin{frame}{The running summary 3}
 \begin{itemize}
 	\item Dependent types are types that can depend on values.
-	\item In dependently typed languages there is a universe -- a type whose elements are themselves types.
+	\item In dependently typed languages:
+	\item There is a universe -- a type whose elements are themselves types.
 	\item \textbf{There is a type of dependent functions which are just like ordinary functions, but their output TYPE can depend on the VALUE of their input}.
 \end{itemize}
 \end{frame}
 
-\section{Dependent pairs and records}
-% Introduce sigma types by analogy with ordinary products.
-% Always call it "dependent pair type" and use F* notation
-% (i.e. (x : A) * P x) to minimize confusion.
-
-\subsection{Example: everybody loves filling forms}
-% An example, something along the lines of how to use dependent pairs
-% to avoid forms with "not applicable" fields.
-
-
+\section{Records}
 
 \begin{frame}{Non-dependent pairs}
 \begin{itemize}
@@ -441,29 +439,75 @@
 \begin{itemize}
 	\item Now, watch the analogy unfold\dots
 	\item If \m{a :\ Type} is a type and \textbf{\m{b :\ a -> Type} is a family of types}, then there is \textbf{a type \m{(x :\ a) * b x :\ Type} of dependent pairs}.
-	\item To create a dependent pair, we write \m{(x, y)} where \m{x} is of type \m{a} and \textbf{\m{y} is of type \m{b x}}.
-	\item To use a pair \m{p :\ (x :\ a) * b x}, we use projections -- we have \m{fst p :\ a} \textbf{and \m{snd p :\ b (fst p)}}.
+	\item To create a dependent pair, we write \m{(x, y)} where \m{x} is of type \m{a} and \m{y} is of type \m{b x}.
+	\item To use a pair \m{p :\ (x :\ a) * b x}, we use projections -- we have \m{fst p :\ a} and \m{snd p :\ b (fst p)}.
 	\item We can also pattern match on dependent pairs.
 \end{itemize}
 \end{frame}
 
-\section{Optional: some arithmetic}
-% An optional section.
-
-\subsection{Sigma}
-% Introduce the sigma notation for dependent pair types.
-% Explain it by parallels with math's sigma notation for
-% addition. Introduce the name "dependent sum (type)".
-
-\subsection{Pi}
-% Introduce the pi notation for dependent function types.
-% Explain it by parallels with math's pi notation for
-% multiplication. Introduce the name "dependent product (type)".
-
-\begin{frame}{Dependent products, Pi type and multiplication}
+\begin{frame}{More dependent pairs}
 \begin{itemize}
-	\item The dependent function type also goes by two other names: \textbf{the dependent product type and the Pi type}.
-	\item \textbf{There's also a different notation}: \m{(x :\ a) -> b x} is sometimes written as $\displaystyle \prod x :\ a, b(x)$ or $\displaystyle \prod_{x :\ a} b(x)$ or similar.
+	\color{red}
+	\item \textbf{THE CODE IN THIS SLIDE IS NOT VALID F* CODE!}
+	\color{black}
+	\item \textbf{In theory, we could iterate the dependent pair type}, while dropping unneeded parentheses and asterisks -- analogously to what we did for dependent functions.
+	\item \m{(x :\ a) * b x}
+	\item \m{(x :\ a) (y :\ b x) * c x y}
+	\item \m{(x :\ a) (y :\ b x) (z :\ c x y) * d x y z}
+	\item \textbf{But using iterated dependent pairs is very inconvenient!}
+	\item To access component of a dependent quadruple \m{p} we would have to write \m{fst p}, \m{fst (snd p)}, \m{fst (snd (snd p))} and \m{snd (snd (snd p))}.
+	\item This is very bad and therefore F* doesn't support it.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dependent record types}
+\begin{itemize}
+	\item \textbf{There's a better way that iterating dependent pair types: dependent record types}.
+	\item A record is basically a labeled tuple.
+	\item \textbf{A dependent record is basically a labeled dependent tuple}.
+	\item This means that the TYPES of later fields in a dependent record can depend on the VALUES of earlier fields.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Code snippet no 4 - dependent records in F*}
+\begin{itemize}
+	\item Let's see how dependent records work in F*.
+	\item See the code snippet \m{Lecture1/DependentRecords.fst}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The running summary 4}
+\begin{itemize}
+	\item Dependent types are types that can depend on values.
+	\item In dependently typed languages there is:
+	\item There is a universe -- a type whose elements are themselves types.
+	\item There is a type of dependent functions which are just like ordinary functions, but their output TYPE can depend on the VALUE of their input.
+	\item \textbf{There is a type of dependent pairs which are just like ordinary pairs, but the TYPE of their second component can depend on the VALUE of their first component}.
+	\item \textbf{Dependent record types are a more convenient version of iterated dependent pair types}.
+\end{itemize}
+\end{frame}
+
+\section{The Life of Pi}
+
+\begin{frame}{Pi type and multiplication}
+\begin{itemize}
+	\item The dependent function type \textbf{is also known as the Pi type}.
+	\item \textbf{This name comes from a notation}: \m{(x :\ a) -> b x} is sometimes written as $\displaystyle \prod_{x :\ a} b(x)$.
+	\item \textbf{This notation comes from an analogy with multiplication}. In math $\displaystyle \prod_{k = 0}^n a_k$ means $a_0 \cdot a_1 \cdot ... \cdot a_n$.
+	\item \textbf{We can think about dependent function types in this way too}. For example, the type \m{(x :\ bool) -> p x} is equivalent to \m{p true * p false}.
+	\item The result of multiplication is called a product, hence the dependent function type \textbf{is also known as the dependent product type}.
+	\item As it turns out, the dependent function type \textbf{generalizes both the ordinary function type and the product type}, but in different ways.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sigma type and addition}
+\begin{itemize}
+	\item The dependent pair type \textbf{is also known as the Sigma type}.
+	\item \textbf{This name comes from a notation}: \m{(x :\ a) * b x} is sometimes written as $\displaystyle \sum_{x :\ a} b(x)$.
+	\item \textbf{This notation comes from an analogy with addition}. In math $\displaystyle \sum_{k = 0}^n a_k$ means $a_0 + a_1 + ... + a_n$.
+	\item \textbf{We can think about dependent pair types in this way too}. For example, the type \m{(x :\ bool) * p x} is equivalent to \m{p true + p false} (where \m{+} just means a simple tagged union).
+	\item The result of addition is called a sum, hence the dependent pair type \textbf{is also known as the dependent sum type}.
+	\item As it turns out, the dependent pair type \textbf{generalizes both the product type and the sum type}, but in different ways.
 \end{itemize}
 \end{frame}
 
