@@ -96,43 +96,37 @@
 \end{itemize}
 \end{frame}
 
-\section{General idea}
+\section{Why}
 
-\begin{frame}{Values and types}
+\begin{frame}{Why should we care about dependent types? 1/3}
 \begin{itemize}
-	\item To understand dependent types, first we have to understand \textbf{dependency}.
-	\item And to understand dependency, we need to be aware of the distinction between \textbf{values} and \textbf{types}.
-	\item By \textbf{values}, we mean the bread-and-butter of programming: numbers, strings, arrays, lists, functions, etc.
-	\item It should be pretty obvious to you that in most languages, \textbf{types} are not of the same status as numbers or functions.
+	\item Programs written in dynamically typed languages perform a lot of runtime checks.
+	\item Beyond a certain size \textbf{dynamically typed software is hard to extend, refactor and maintain because errors manifest very late} in the development process, i.e. at runtime.
+	\item Statically typed languages make the situation better, because they move typechecking to compile time, which means a lot of errors get caught much sooner.
+	\item \textbf{Static typing is good}.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Dependencies}
+\begin{frame}{Why should we care about dependent types? 2/3}
 \begin{itemize}
-	\item Dependency is easy to understand. In fact, if you know basic F\#, then you already know most of it, because in F\#:
-	\item \textbf{Values can depend on values}: we can think that the sum \m{n + m} is a number that depends on the numbers \m{n} and \m{m}. This dependency can be expressed as a function: \m{fun (n m :\ int) -> n + m}.
-	\item \textbf{Values can depend on types}: for example, the identity function \m{fun (x :\ 'a) -> x} depends on the type \m{'a}.
-	\item \textbf{Types can depend on types}: for example, the F\# type \m{Set<'a>} depends on the type \m{'a}.
+	\item But in simple functional languages like F\# there's still plenty of runtime checks -- division by zero, taking the head of empty list and a lot of user-defined checks which throw exceptions in case of failure.
+	\item With dependent types, all runtime checks can be turned into static checks -- \textbf{all errors are type errors}.
+	\item This results in more extensible, refactorable and maintainable software (and also better performance -- less stuff to do at runtime).\item We can not only get rid of runtime checks, dependent types can also replace most unit tests and property tests.
+	\item \textbf{Dependent types bring static typing to its limits}.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Naming the dependencies}
+\begin{frame}{Why should we care about dependent types? 3/3}
 \begin{itemize}
-	\item I bet you spotted the pattern in the previous slide, but it's a good idea to also have a name for the feature provided by each kind of dependency.
-	\item Values can depend on values: (first-class) \textbf{functions}.
-	\item Values can depend on types: \textbf{polymorphism} (i.e. ``generics'').
-	\item Types can depend on types: \textbf{type operators}.
+	\item And when I say all errors are typing errors, I really mean it -- with dependent types, we can express all properties, formulate all specifications and describe all mathematical objects.
+	\item \textbf{Dependent types reveal a deep connection between functional programming and logic}.
+	\item Even though powerful, dependent types are very simple and general.
+	\item Have you every heard about fancy Haskell stuff like typeclasses, higher-rank types, higher-kinded types, existential types and so on?
+	\item No? No problem -- \textbf{with dependent types, we get all of that (and much more) for free}.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Dependent types}
-\begin{itemize}
-	\item There's yet another kind of dependency, which is not present in F\#, but is present in F* and is the topic of this lecture.
-	\item \textbf{Types can depend on values}: \textbf{dependent types}.
-	\item But what are dependent types good for? You have been living your whole life without them, after all!
-	\item Before we go on to explain dependent types, let's see some examples.
-\end{itemize}
-\end{frame}
+\section{Examples}
 
 \begin{frame}{Matrix multiplication}
 \begin{itemize}
@@ -190,21 +184,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Why should we care?}
-\begin{itemize}
-	\item Large software systems written in dynamically typed languages are hard to refactor, because all type checks occur at runtime.
-	\item Statically typed languages make the situation better, because they move these checks to compile time, making them much more likely to be useful.
-	\item But in simple functional languages like F\# there's still plenty of room for dynamic runtime checks -- array bounds checking, division by zero, and a lot of user-defined checks which throw exceptions in case of failure.
-	\item With dependent types, these can be eliminated, which results in \textbf{even more refactorability and maintainability}.
-	\item This is also a matter of performance -- \textbf{no runtime checks means faster programs}.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{The running summary 1}
-\begin{itemize}
-	\item \textbf{Dependent types are types that can depend on values}.
-\end{itemize}
-\end{frame}
+\section{The idea}
 
 \begin{frame}{We're getting serious}
 \begin{itemize}
@@ -215,9 +195,49 @@
 \end{itemize}
 \end{frame}
 
-\section{First-class types}
+\begin{frame}{Values and types}
+\begin{itemize}
+	\item To understand dependent types, first we have to understand \textbf{dependency}.
+	\item And to understand dependency, we need to be aware of the distinction between \textbf{values} and \textbf{types}.
+	\item By \textbf{values}, we mean the bread-and-butter of programming: numbers, strings, arrays, lists, functions, etc.
+	\item It should be pretty obvious to you that in most languages, \textbf{types} are not of the same status as numbers or functions.
+\end{itemize}
+\end{frame}
 
-\subsection{What does ``first-class'' mean?}
+\begin{frame}{Dependencies}
+\begin{itemize}
+	\item Dependency is easy to understand. In fact, if you know basic F\#, then you already know most of it, because in F\#:
+	\item \textbf{Values can depend on values}: we can think that the sum \m{n + m} is a number that depends on the numbers \m{n} and \m{m}. This dependency can be expressed as a function: \m{fun (n m :\ int) -> n + m}.
+	\item \textbf{Values can depend on types}: for example, the identity function \m{fun (x :\ 'a) -> x} depends on the type \m{'a}.
+	\item \textbf{Types can depend on types}: for example, the F\# type \m{Set<'a>} depends on the type \m{'a}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naming the dependencies}
+\begin{itemize}
+	\item I bet you spotted the pattern in the previous slide, but it's a good idea to also have a name for the feature provided by each kind of dependency.
+	\item Values can depend on values: (first-class) \textbf{functions}.
+	\item Values can depend on types: \textbf{polymorphism} (i.e. ``generics'').
+	\item Types can depend on types: \textbf{type operators}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dependent types}
+\begin{itemize}
+	\item There's yet another kind of dependency, which is not present in F\#, but is present in F* and is the topic of this lecture.
+	\item \textbf{Types can depend on values}: \textbf{dependent types}.
+	\item But what are dependent types good for? You have been living your whole life without them, after all!
+	\item Before we go on to explain dependent types, let's see some examples.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The running summary 1}
+\begin{itemize}
+	\item \textbf{Dependent types are types that can depend on values}.
+\end{itemize}
+\end{frame}
+
+\section{First-class types}
 
 \begin{frame}{Juggling dependencies}
 \begin{itemize}
@@ -487,7 +507,7 @@
 \end{itemize}
 \end{frame}
 
-\section{The Life of Pi}
+\section{Life of Pi}
 
 \begin{frame}{Pi type and multiplication}
 \begin{itemize}
@@ -510,13 +530,6 @@
 	\item As it turns out, the dependent pair type \textbf{generalizes both the product type and the sum type}, but in different ways.
 \end{itemize}
 \end{frame}
-
-\subsection{Plus, cross and arrow}
-% Explain that dependent pair types are a generalization of
-% both sum types and product types.
-
-% Explain that dependent function types are a generalization of
-% both product types and function types.
 
 \section{Inductive families}
 % Refresher on ordinary algebraic data types.
