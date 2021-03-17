@@ -99,6 +99,14 @@ type stuff =
     bl  : bool;
 }
 
+// Records can be created like this:
+let someStuff : stuff =
+{
+    num = 42;
+    str = "Hello there!";
+    bl  = false;
+}
+
 // Record fields can be accessed with dot syntax 'record.field'.
 let double_num (s : stuff) : int = s.num + s.num
 
