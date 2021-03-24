@@ -68,7 +68,7 @@
 \begin{frame}{The running summary 4}
 \begin{itemize}
 	\item Dependent types are types that can depend on values.
-	\item In dependently typed languages there is:
+	\item In dependently typed languages:
 	\item There is a universe -- a type whose elements are themselves types.
 	\item There is a type of dependent functions which are just like ordinary functions, but their output TYPE can depend on the VALUE of their input.
 	\item \textbf{Dependent record types are just like ordinary records, but the TYPES of later fields can depend on the VALUE of earlier fields}.
@@ -91,9 +91,9 @@
 \begin{frame}{Sigma type and addition}
 \begin{itemize}
 	\item The dependent pair type \textbf{is also known as the Sigma type}.
-	\item \textbf{This name comes from a notation}: \m{(x :\ a) * b x} is sometimes written as $\displaystyle \sum_{x :\ a} b(x)$.
+	\item \textbf{This name comes from a notation}: \m{(x :\ a) \& b x} is sometimes written as $\displaystyle \sum_{x :\ a} b(x)$.
 	\item \textbf{This notation comes from an analogy with addition}. In math $\displaystyle \sum_{k = 0}^n a_k$ means $a_0 + a_1 + ... + a_n$.
-	\item \textbf{We can think about dependent pair types in this way too}. For example, the type \m{(x :\ bool) * p x} is equivalent to \m{p true + p false} (where \m{+} just means a simple tagged union).
+	\item \textbf{We can think about dependent pair types in this way too}. For example, the type \m{(x :\ bool) \& p x} is equivalent to \m{p true + p false} (where \m{+} just means a simple tagged union).
 	\item The result of addition is called a sum, hence the dependent pair type \textbf{is also known as the dependent sum type}.
 	\item As it turns out, the dependent pair type \textbf{generalizes both the product type and the sum type}, but in different ways.
 \end{itemize}

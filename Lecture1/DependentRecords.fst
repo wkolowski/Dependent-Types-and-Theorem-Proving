@@ -1,7 +1,7 @@
 module DependentRecords
 
 open FStar.String
-open FStar.Squash
+//open FStar.Squash
 
 // An ordinary pair.
 let p : int * string = (42, "42")
@@ -31,54 +31,46 @@ let snd' (#a : Type) (#b : a -> Type) (p : (x : a & b x)) : b (fst' p) =
     | (| x, y |) -> y
 
 // Defining projections for iterated dependent pairs is SO ANNOYING I won't
-// even try. It's much easier to use dependent records instead.
+// even try to do it. It's much easier to use dependent records instead.
+
+
 
 // But what are dependent records good for?
 
 // Forms! Everybody loves filling in forms, right? No? Well, dependent records
 // can make forms a bit less awful.
 
-// Surely you have at some point in your life encountered a form which had a
-// question of the form "Did you stop beating your wife?" These questions are
-// annoying, because they have presuppositions.
+// Surely you have at some point in your life encountered a question like
+// "Did you stop smoking?". These are questions with presuppositions: asking
+// the question presupposes that certain facts are true - in our example, the
+// presupposition is that you were smoking.
 
-// These presuppositions are often posed earlier as separate questions: "Do you
-// beat your wife?". Then, the main question will get an additional answer, like
-// "Not Applicable".
+// Such questions are very annoying to model in forms. The presuppositions are
+// often posed earlier as separate questions: "Did you smoke?". Then, the main
+// question will get an additional answer, like "Not Applicable".
 
 // But this is a very weak solution, because now somebody can answer "Yes" to
 // the presupposition question and "Not Applicable" to the main question, which
 // was not intended and results in an incorrect state.
 
 // Let's say you're programming forms for an institution which asks these kinds
-// of questions. Now you need to implement some kind of form validator in order
+// of questions. Now you need to implement a validator for the form in order
 // to rule out the incorrect answer combinations. But the situation is still
 // pretty bad, because internally you work with a representation which allows
 // these incorrect answer combinations.
 
 // Functional programming considers this a bad practice - you should "make
-// incorrect states unrepresentable". Dependent records can help you here - you
+// illegal states unrepresentable". Dependent records can help you here - you
 // can use them to precisely describe, at the type level, which questions
 // depend on which previous questions and precisely in what way. This can be
 // pushed even further - you can include or exclude nested subforms based on
 // answers to previous questions.
 
-// If this whole example sounds silly to you, well... this kind of thing is
-// one of the most important reasons why we are CS are even trying to use F*
-// in production.
-
 // Enough talking, on to the (admittedly, silly) example.
 
-type nationality = | Polish | American
+// We will have a subform that asks about covid.
+type covidStatus = | Healthy | Ill | Recovered | Dead
 
-// SSN is the American Social Security Number and PESEL is a similar thing for
-// Poland. We define both as string because this is just an example.
-let ssn : Type = string
-let pesel : Type = string
-
-type covidStatus = | Healthy | Ill | Recovered
-
-// A subform that asks about covid.
 type covidSubform =
 {
     wereYouHospitalized : bool;
@@ -90,9 +82,9 @@ type covidSubform =
     willYouVaccinate : bool;
 }
 
+// We will also have a subform that asks about programming.
 type progLang = | Haskell | Fsharp | Python | Cpp | Other
 
-// A subform that asks about programming.
 type programmingSubform =
 {
     isProgrammingYourDailyJob : bool;
@@ -105,45 +97,43 @@ type programmingSubform =
     favouriteLang : progLang;
 }
 
-type eyeColor = | Blue | Green | Brown
+// And we will ask about some personal data.
+type nationality = | Polish | American
 
+// SSN is the American Social Security Number and PESEL is a similar thing for
+// Poland. We define both as string because this is just an example.
+let ssn : Type = string
+let pesel : Type = string
+
+// This is how dependent records work.
 type bigForm =
 {
     // Ordinary, non-dependent fields.
     firstName : string;
-    eyeColor : eyeColor;
     
-    // Weird: fields and types can have the same name!
+    // Beware: fields and types can have the same name!
     nationality : nationality;
     
     // What type of ID we ask for depends on nationality of the person.
+    // To put it more explicitly: the TYPE of 'id' depends on the VALUE of
+    // 'nationality'.
     id : (match nationality with
           | Polish   -> pesel
           | American -> ssn);
 
-    doYouHaveAWife : bool;
-    
-    // The TYPE of 'doYouBeatYourWife' depends on the VALUE of the field
-    // 'doYouHaveAWife'. In case the latter is true, the possible answers
-    // are of type bool (i.e. true or false). But in case 'doYouHaveAWife'
-    // is false, the type of 'doYouBeatYourWife' is unit - you can't beat
-    // your wife if you don't have one, and there's no point in even
-    // asking such a question!
-    doYouBeatYourWife :
-        (match doYouHaveAWife with
-         | true -> bool
-         | false -> unit);
-
-    // Similar story as above, but this time if somebody says he's a
-    // programmer, we ask him a few programming questions. Otherwise,
-    // we skip the whole subform.
+    // Here we have an example of a subform which is included or excluded
+    // depending on the value of the field 'areYouAProgrammer'. We model
+    // "excluding" a subform with the type unit, i.e. the type that has
+    // only a single element.
     areYouAProgrammer : bool;
     programmingSubform :
         (match areYouAProgrammer with
         | true  -> programmingSubform
         | false -> unit);
 
-    // Once again the same thing, but for covid.
+    // Same story as above - we include the covid subform only for if the
+    // value of 'covidStatus' is Ill or Recovered, and we exclude the
+    // subform if the value is Healthy or Dead.
     covidStatus : covidStatus;
     covidSubform :
         (match covidStatus with
@@ -154,13 +144,9 @@ type bigForm =
 let me : bigForm =
 {
     firstName = "Wojciech";
-    eyeColor  = Brown;
 
     nationality = Polish;
     id = "Not gonna disclose this";
-
-    doYouHaveAWife = false;
-    doYouBeatYourWife = ();
 
     areYouAProgrammer = true;
     programmingSubform =
@@ -174,3 +160,8 @@ let me : bigForm =
     covidStatus = Healthy;
     covidSubform = ();
 }
+
+
+
+// Another nice use of dependent records (well, of records in general too)
+// is simulating Haskell's typeclasses, although without instance search.
