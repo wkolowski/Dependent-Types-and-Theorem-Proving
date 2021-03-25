@@ -41,29 +41,102 @@ let snd' (#a : Type) (#b : a -> Type) (p : (x : a & b x)) : b (fst' p) =
 // can make forms a bit less awful.
 
 // Surely you have at some point in your life encountered a question like
-// "Did you stop smoking?". These are questions with presuppositions: asking
-// the question presupposes that certain facts are true - in our example, the
-// presupposition is that you were smoking.
+// "Why do you like pizza?". These questions have presuppositions: asking
+// the question presupposes that certain facts are true. In our example, the
+// presupposition is that you like pizza.
 
-// Such questions are very annoying to model in forms. The presuppositions are
-// often posed earlier as separate questions: "Did you smoke?". Then, the main
-// question will get an additional answer, like "Not Applicable".
+// Questions with presuppositions are annoying to model in forms, because it's
+// not clear how to model the presuppositions. One common solution is to add
+// an earlier question which asks about the presupposition and then provide
+// an additional answer to the main question, like "Not Applicable".
+
+type pizzaReason = | NotApplicable | ItsCheap | ItsTasty | Other
+
+type pizzaForm =
+{
+    doYouLikePizza    : bool;
+    whyDoYouLikePizza : pizzaReason;
+}
 
 // But this is a very weak solution, because now somebody can answer "Yes" to
 // the presupposition question and "Not Applicable" to the main question, which
-// was not intended and results in an incorrect state.
+// was not intended. Conversely, somebody might answer "No" to the first
+// question, but then answer the main question with something else than
+// "Not Applicable", 
+
+let evilAnswer : pizzaForm =
+{
+    doYouLikePizza = true;
+    whyDoYouLikePizza = NotApplicable
+}
+
+let evilAnswer2 : pizzaForm =
+{
+    doYouLikePizza = false;
+    whyDoYouLikePizza = ItsTasty;
+}
 
 // Let's say you're programming forms for an institution which asks these kinds
 // of questions. Now you need to implement a validator for the form in order
-// to rule out the incorrect answer combinations. But the situation is still
-// pretty bad, because internally you work with a representation which allows
-// these incorrect answer combinations.
+// to rule out the incorrect answer combinations.
 
-// Functional programming considers this a bad practice - you should "make
-// illegal states unrepresentable". Dependent records can help you here - you
-// can use them to precisely describe, at the type level, which questions
-// depend on which previous questions and precisely in what way. This can be
-// pushed even further - you can include or exclude nested subforms based on
+let validPizzaForm (f : pizzaForm) : bool =
+    match doYouLikePizza f, whyDoYouLikePizza f with
+    | true, NotApplicable  -> false
+    | true, _              -> true
+    | false, NotApplicable -> true
+    | false, _             -> false
+
+// But the situation is still pretty bad, because internally you work with a
+// representation which allows these incorrect answer combinations. In
+// functional programming this is considered a bad practice - you should "make
+// illegal states unrepresentable".
+
+// Dependent records can help you here - you can use them to precisely describe,
+// at the type level, which questions depend on which previous questions and
+// precisely in what way.
+
+// We don't need NotApplicable anymore, so we make a new type.
+type pizzaReason' = ItsCheap' | ItsTasty' | Other'
+
+type dependentPizzaForm =
+{
+    doYouLikePizza'    : bool;
+    
+    // This is the essence of dependent records: the TYPE of the field
+    // whyDoYouLikePizza' depends on the VALUE of the field doYouLikePizza'.
+    // In case the value is true, the type is pizzaReason'. In case it's
+    // false, the type is unit, i.e. the type that has only one element.
+    whyDoYouLikePizza' : (if doYouLikePizza' then pizzaReason' else unit);
+}
+
+// People who like pizza must give a correct reason for it.
+let like : dependentPizzaForm =
+{
+    doYouLikePizza'    = true;
+    whyDoYouLikePizza' = ItsTasty';
+}
+
+// People who don't like pizza can't provide a reason for why they like it,
+// but they need to enter (), i.e. the only value of the unit type, as
+// the reason.
+let dislike : dependentPizzaForm =
+{
+    doYouLikePizza'    = false;
+    whyDoYouLikePizza' = ();
+}
+
+// Of course, it is also possible to model this simple form using ordinary
+// algebraic data types. But it is precisely the simplicity of the form's
+// 
+
+type algebraicPizzaForm =
+    | DoesntLikePizza
+    | LikesPizza (r : pizzaReason')
+
+
+
+//This can be pushed even further - you can include or exclude nested subforms based on
 // answers to previous questions.
 
 // Enough talking, on to the (admittedly, silly) example.
