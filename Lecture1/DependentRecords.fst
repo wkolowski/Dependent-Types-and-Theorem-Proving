@@ -1,7 +1,8 @@
 module DependentRecords
 
 open FStar.String
-//open FStar.Squash
+
+// 1. Dependent pairs.
 
 // An ordinary pair.
 let p : int * string = (42, "42")
@@ -33,7 +34,7 @@ let snd' (#a : Type) (#b : a -> Type) (p : (x : a & b x)) : b (fst' p) =
 // Defining projections for iterated dependent pairs is SO ANNOYING I won't
 // even try to do it. It's much easier to use dependent records instead.
 
-
+// 2. Dependent records.
 
 // But what are dependent records good for?
 
@@ -50,7 +51,7 @@ let snd' (#a : Type) (#b : a -> Type) (p : (x : a & b x)) : b (fst' p) =
 // an earlier question which asks about the presupposition and then provide
 // an additional answer to the main question, like "Not Applicable".
 
-type pizzaReason = | NotApplicable | ItsCheap | ItsTasty | Other
+type pizzaReason = NotApplicable | ItsCheap | ItsTasty | Other
 
 type pizzaForm =
 {
@@ -67,7 +68,7 @@ type pizzaForm =
 let evilAnswer : pizzaForm =
 {
     doYouLikePizza = true;
-    whyDoYouLikePizza = NotApplicable
+    whyDoYouLikePizza = NotApplicable;
 }
 
 let evilAnswer2 : pizzaForm =
@@ -127,19 +128,21 @@ let dislike : dependentPizzaForm =
 }
 
 // Of course, it is also possible to model this simple form using ordinary
-// algebraic data types. But it is precisely the simplicity of the form's
-// 
+// algebraic data types, by making presuppositions into constructors and
+// attaching the type of answers to the main question into the appropriate
+// constructor.
 
 type algebraicPizzaForm =
     | DoesntLikePizza
     | LikesPizza (r : pizzaReason')
 
+// But this works only because we're dealing with a single, simple question.
+// If we wanted to model a question with more complicated presuppositions or
+// more dependencies, the above solution would quickly degenerate into a mess.
 
-
-//This can be pushed even further - you can include or exclude nested subforms based on
-// answers to previous questions.
-
-// Enough talking, on to the (admittedly, silly) example.
+// Dependent records can, just like ordinary records, be nested. Together with
+// dependencies, this gives us a nice ability to include or exclude nested
+// subforms based on answers to previous questions. Let's see a bigger example.
 
 // We will have a subform that asks about covid.
 type covidStatus = | Healthy | Ill | Recovered | Dead
@@ -178,7 +181,6 @@ type nationality = | Polish | American
 let ssn : Type = string
 let pesel : Type = string
 
-// This is how dependent records work.
 type bigForm =
 {
     // Ordinary, non-dependent fields.
@@ -233,8 +235,3 @@ let me : bigForm =
     covidStatus = Healthy;
     covidSubform = ();
 }
-
-
-
-// Another nice use of dependent records (well, of records in general too)
-// is simulating Haskell's typeclasses, although without instance search.
