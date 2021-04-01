@@ -501,6 +501,56 @@
 \end{itemize}
 \end{frame}
 
+\section{Inductive types}
+
+\begin{frame}{Inductive types are discriminated unions}
+\begin{itemize}
+	\item Recall how ordinary inductive types work in F\# (where they are called discriminated unions).
+	\item To define an inductive type \m{I :\ Type}, we list its constructors.
+	\item The constructors are ordinary functions which take some arguments (which may be of type \m{I}, i.e. the one that is being defined) and return an element of \m{I}.
+	\item To create an element of \m{I}, we use one of the constructors and provide it with the arguments it requires.
+	\item To use an element of \m{I}, we pattern match on it and for each case we provide an expression which will be computed if that case matches.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Inductive families 1/2}
+\begin{itemize}
+	\item Now watch the analogy unfold...
+	\item To define an \textbf{inductive family} \m{I : a -> Type}, we list its constructors. Here \m{a} is some type that is already defined.
+	\item The constructors are \textbf{dependent functions} which take some arguments (which \textbf{may be of type} \m{I y} for some \m{y :\ a}) and \textbf{return an element of the type} \m{I x}, for some \m{x :\ a}.
+	\item To create an element of \m{I x}, we use one of the constructors and provide it with the arguments it requires.
+	\item To use an element of \m{I x}, we pattern match on it and for each case we provide an expression which will be computed if that case matches.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Inductive families 2/2}
+\begin{itemize}
+	\item This time it's a bit harder to spot the analogy, so let's elaborate on it.
+	\item Instead of a single type \m{I :\ Type}, we define a \textbf{family of types} \m{I :\ a -> Type} all at once.
+	\item In this context, values of type \m{a} are called \textbf{indices} of the family \m{I}.
+	\item We define a \textbf{separate type for each possible index}.
+	\item To create a value that belongs to \textbf{some type} \m{I x} in the family, a constructor may require an argument that belongs to \m{I y}, \textbf{a different type} in the family.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Code snippet no 5 - inductive families in F*}
+\begin{itemize}
+	\item Let's see how inductive families work in F*.
+	\item See the code snippet \m{Lecture1/InductiveFamilies.fst}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The running summary 5}
+\begin{itemize}
+	\item Dependent types are types that can depend on values.
+	\item In dependently typed languages:
+	\item There is a universe -- a type whose elements are themselves types.
+	\item There is a type of dependent functions which are just like ordinary functions, but their output TYPE can depend on the VALUE of their input.
+	\item Dependent record types are just like ordinary records, but the TYPES of later fields can depend on the VALUE of earlier fields.
+	\item Inductive families are just like ordinary inductive types, but the TYPES in the family can depend on the VALUE of the index.
+\end{itemize}
+\end{frame}
+
 \section{Life of Pi}
 
 \begin{frame}{Pi type and multiplication}
@@ -522,6 +572,27 @@
 	\item \textbf{We can think about dependent pair types in this way too}. For example, the type \m{(x :\ bool) \& p x} is equivalent to \m{p true + p false} (where \m{+} just means a simple tagged union).
 	\item The result of addition is called a sum, hence the dependent pair type \textbf{is also known as the dependent sum type}.
 	\item As it turns out, the dependent pair type \textbf{generalizes both the product type and the sum type}, but in different ways.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Inductive types and polynomials 1/2}
+\begin{itemize}
+	\item An inductive type is \textbf{EITHER} constructor 1 applied to arguments \m{x1} \textbf{and} \m{x2} \dots \textbf{and} \m{xN} \textbf{OR} constructor 2 applied to arguments \dots \textbf{OR} constructor M applied to arguments \dots
+	\item In math, OR means \textbf{addition}, whereas AND means \textbf{multiplication}.
+	\item So, an inductive type boils down to a \textbf{Sum of Products}.
+	\item These products are made of two kinds of arguments: recursive arguments (whose type is the inductive type that is being defined) and non-recursive ones.
+	\item If you think about it long enough, \textbf{inductive types correspond to polynomials}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Inductive types and polynomials 2/2}
+\begin{itemize}
+	\item This could be hard to swallow, so let's see examples.
+	\item Lists satisfy the equation $\m{List}(A) = 1 + A \times \m{List}(A)$.
+	\item Here $1$ corresponds to the \m{nil} constructor, whereas the $A$ and $\m{List}(A)$ on the right correspond to the arguments of the \m{cons} constructor.
+	\item This corresponds to the polynomial $F(X) = 1 + A \times X$.
+	\item $\m{List}(A)$ is the least fixed point of this polynomial, i.e. the smallest type $X$ that satisfies $F(X) = X$.
+	\item Here ``fixed point'' corresponds to the fact that we create lists using constructors (\m{nil} and \m{cons}), whereas ``least'' corresponds to the fact that all lists are made of finitely many constructors.
 \end{itemize}
 \end{frame}
 
