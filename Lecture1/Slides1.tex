@@ -503,9 +503,9 @@
 
 \section{Inductive types}
 
-\begin{frame}{Inductive types are discriminated unions}
+\begin{frame}{Inductive types refresher}
 \begin{itemize}
-	\item Recall how ordinary inductive types work in F\# (where they are called discriminated unions).
+	\item Recall how ordinary inductive types work in F\# (where they are called discriminated unions; in Haskell, they are knwon as algebraic data types).
 	\item To define an inductive type \m{I :\ Type}, we list its constructors.
 	\item The constructors are ordinary functions which take some arguments (which may be of type \m{I}, i.e. the one that is being defined) and return an element of \m{I}.
 	\item To create an element of \m{I}, we use one of the constructors and provide it with the arguments it requires.
