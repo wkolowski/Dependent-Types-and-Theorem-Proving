@@ -134,23 +134,47 @@ let rec vget (#a : Type) (#n : nat) (v : vec a n) (i : fin n)  : a =
 
 // 2.2. Enforcing protocols in types.
 
-type atmState : Type = | Ready | CardInserted | Session
-assume type atm : atmState -> Type
+// With inductive families, whenever we use a value of type a i1 (for some type
+// family a : i -> Type and index i1 : i) in place where a value of type a i2
+// (for some i2 : i) is expected, the typechecker has to check whether i1 and
+// i2 are equal to make sure that the program is well-typed.
 
+// Sounds completely boring? Well, this gives us A LOT of new opportunities,
+// because we can use this little check of index equality  to detect (and
+// rule out) buggy programs! We just need to encode the relevant correctness
+// criteria in the indices of our type families'.
 
-assume val initATM : () -> atm Ready
+// There can be various situations to which this technique applies, but the
+// most obvious one is when we are dealing with state machines, i.e: there is
+// a bunch of states and a bunch of operations which, in addition to doing
+// something useful, can transition between states. Some of these operations
+// are also valid only in certain states and invalid in others. The problem
+// that we want to solve is: how to represent this in code with as few bugs
+// as possible?
 
-assume val shutDown : atm Ready -> ()
+// The classical solution is described here: https://fsharpforfunandprofit.com/posts/designing-with-types-representing-states/
+// But the most important insight for us is this: create a type for the states
+// and then represent stateful objects as an inductive family indexed by
+// the state type.
 
-assume type card
+type loginState =
+    | LoggedIn
+    | LoggedOut
 
-assume val insertCard : card -> atm Ready -> atm CardInserted
-assume val ejectCard  : atm CardInserted -> atm Ready
+assume type dataStore : loginState -> Type
 
-checkPIN
+assume val validate : (username : string) -> (password : string) -> bool
 
-assume type money
+assume val login : (username : string)
+                -> (password : string)
+                -> dataStore LoggedOut
+                -> (if validate username password
+                    then dataStore LoggedIn
+                    else unit)
 
-assume val dispense : money -> atm Session -> 
-getInput
-assume val message : string -> (#s : atmState) -> atm s -> atm s
+assume val logout : dataStore LoggedIn -> dataStore LoggedOut
+    
+assume type data
+
+assume val readPublicData    : (#s : loginState) -> dataStore s -> data
+assume val readTopSecretdata : dataStore LoggedIn -> data
