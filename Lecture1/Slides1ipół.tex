@@ -16,16 +16,65 @@
 \frame{\titlepage}
 \frame{\tableofcontents}
 
-\subsection{Intrinsic vs extrinsic style}
+\section{Refinement types}
+
+\begin{frame}{The problem of richness}
+\begin{itemize}
+    \item In dependently typed languages there is a lot of types.
+    \item This is a blessing, because we can express all the complicated types and properties we need in order to guarantee correctness of our programs.
+    \item But the richness of types also causes problems: it is often the case that there are many ways to define essentially the same type.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The various faces of a \m{vec}tor 1/2}
+\begin{itemize}
+    \item We have already seen two incarnations of the type \m{vec a n} of vectors:
+    \item Functional, recursive: by recursion on the index.
+    \item Inductive, intrinsic: as an inductive family.
+    \item But there are at least two more definitions:
+    \item Functional, nonrecursive: as a function with domain \m{fin n}.
+    \item Inductive, extrinsic: as a pair of a list and a proof that it's length is equal to \m{n}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The various faces of a \m{vec}tor 2/2}
+\begin{itemize}
+    \item To better understand what the above slide tries to tell us, let's see the various definitions in code.
+    \item See the code snippet \m{Lecture1/Vectors.fst}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+    \item 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+    \item
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+    \item
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+    \item
+\end{itemize}
+\end{frame}
+% Introduce refinement types, using F* notation (i.e. x : int{x > 5}).
+% Go over the head/tail example again, but this time using refinements
+% on ordinary lists.
+
 % Is it better to define indexed inductive types like vectors
 % or go with ordinary inductive types and constrain them with
 % predicates using dependent pairs? Well, neither and this
 % leads us to...
-
-\section{Refinement types}
-% Introduce refinement types, using F* notation (i.e. x : int{x > 5}).
-% Go over the head/tail example again, but this time using refinements
-% on ordinary lists.
 
 \section{Exercises}
 % No idea yet.
