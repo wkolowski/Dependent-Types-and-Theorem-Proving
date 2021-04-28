@@ -8,13 +8,13 @@ module FirstClassTypes
 type integer = int
 
 // An alias is just a new name for an old type.
-let add_integer (n m : integer) : int = n + m
+let add_integer (n m : integer) : integer = n + m
 
 // But in F* types are first-class, so we can do the same using the plain old
 // 'let'. In other words, we can bind types to variables.
 let integer' = int
 
-let add_integer' (n m : integer') : int = n + m
+let add_integer' (n m : integer') : integer = n + m
 
 // But what is the type of integer'? In F*, the universe of types is called Type.
 let integer'' : Type = int
@@ -43,6 +43,10 @@ let rec vec (a : Type) (n : nat) : Type =
     if n = 0
     then unit
     else a * vec a (n - 1)
+
+// We can use vec to define a list of length 4.
+let example_vec : vec nat 4 =
+    (0, (1, (2, (3, ()))))
 
 // A matrix is just a vector of vectors.
 let matrix (a : Type) (n m : nat) : Type =

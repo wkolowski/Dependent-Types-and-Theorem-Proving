@@ -40,24 +40,21 @@ let twice f x = f (f x)
 let twice' (f : int -> int) : int -> int =
     fun (n : int) -> f (f n)
 
-// Algebraic data types.
+// Sum types / discriminated unions.
 
 // We can define sum types (also known as tagged unions, disjoint unions,
-// discriminated unions, variants, etc.). Left and Right are called the
-// constructors of intOrString.
-type intOrString =
-    | Left of int
-    | Right of string
-
+// discriminated unions, variants, etc.).
 // Note: 'sum types' is the standard name used in academia and functional
 // programming circles. It comes from the fact that if type A has n elements
 // and type B has m elements, then their sum A + B has n + m elements (here
 // A + B denotes a type defined similarly to intOrString).
+type intOrString =
+    | Left of int
+    | Right of string
 
-// Left has type int -> intOrString
-// Right has type string -> intOrString
-let l : int -> intOrString = Left
-let r : string -> intOrString = Right
+// We can define some values.
+let an_int : intOrString = Left 42
+let a_string : intOrString = Right "forty two"
 
 // Functions on such types are defined by pattern matching.
 // Patterns must be exhaustive, i.e. all cases must be matched.
@@ -65,6 +62,12 @@ let show (x : intOrString) : string =
     match x with
     | Left _ -> "an integer"
     | Right s -> s
+
+// Left and Right are called the constructors of intOrString.
+// Left has type int -> intOrString
+// Right has type string -> intOrString
+let l : int -> intOrString = Left
+let r : string -> intOrString = Right
 
 // Another syntax for defining sum types, which we will use more often than
 // the previous one. Here we specify the types of constructors instead of just
@@ -115,7 +118,7 @@ let double_num (s : stuff) : int = s.num + s.num
 // as single-constructor sums.
 let double_num' (s : stuff) : int =
     match s with
-    | Mkstuff n _ _ -> n + n
+    | Mkstuff num str bl -> num + num
 
 // The same record type implemented manually.
 type stuff' =
@@ -137,13 +140,15 @@ let bl'  (Mkstuff' _ _ b) = b
 // Transformations between these two equivalent types are called currying
 // and uncyrrying.
 // In F*, curried functions are preferred to uncurried ones.
-let curry (f : int -> string -> bool -> stuff') : int * string * bool -> stuff' =
+let curry (f : int * string * bool -> stuff') : int -> string -> bool -> stuff' =
+    fun i s b -> f (i, s, b)
+
+let uncurry (f : int -> string -> bool -> stuff') : int * string * bool -> stuff' =
     fun p ->
         match p with
         | (i, s, b) -> f i s b
 
-let uncurry (f : int * string * bool -> stuff') : int -> string -> bool -> stuff' =
-    fun i s b -> f (i, s, b)
+// Inductive types / algebraic data types / discriminated unions (?)
 
 // Algebraic data types are sums of products in which the type being defined
 // can appear. Here the constructor Node takes as arguments two trees, i.e.
@@ -151,6 +156,13 @@ let uncurry (f : int * string * bool -> stuff') : int -> string -> bool -> stuff
 type binaryTree =
     | Empty : binaryTree
     | Node  : int -> binaryTree -> binaryTree -> binaryTree
+
+let a_tree : binaryTree =
+    Node 1000
+        (Node 500 Empty Empty)
+        (Node 2000
+            (Node 1500 Empty Empty)
+            Empty
 
 // Algebraic data types are processed with pattern matching and recursion.
 // Remember about the keyword 'let rec'!
