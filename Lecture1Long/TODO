@@ -1,0 +1,6 @@
+1. let open s = _ w F* - poprawić
+2. projekcje generowane automatycznie / Mkstuff.?num
+3. Skompresować bycie first-class
+4. ogarnąć timeouty 
+5. Dodać funkcję main do DependentFunctions
+6. Poszukać atrybutu expect failure dla F*

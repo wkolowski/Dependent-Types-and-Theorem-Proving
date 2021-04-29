@@ -14,8 +14,19 @@
 \begin{document}
 
 \frame{\titlepage}
+\frame{\tableofcontents}
 
 \section{Greetings}
+
+\begin{frame}{General info}
+\begin{itemize}
+	\item The lectures will be held weekly on Fridays.
+	\item Don't worry if you miss a lecture -- the slides are pretty massive and the talks are going to be recorded.
+	\item Each lecture ends with some exercises which will help you familiarize yourself with F* and better understand the ideas covered in the talk.
+	\item But you don't need to do them if you don't want to.
+	\item Repo with all lecture materials: \url{https://github.com/wkolowski/Dependent-Types-and-Theorem-Proving}
+\end{itemize}
+\end{frame}
 
 \begin{frame}{Plan of lectures}
 \begin{itemize}
@@ -27,26 +38,14 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Prerequisites}
-\begin{itemize}
-	\item To understand what we will be talking about, you should have a working knowledge of F\# and the basic concepts of functional programming, namely:
-	\item All about types: algebraic data types, sum types, product types, record types, pattern matching etc.
-	\item All about functions: functions as first-class citizens, higher-order functions, recursive functions, currying etc.
-	\item Even if you know these, you may be unfamiliar with the particular names -- for example, ``sum types'' is a name used in academia and Haskell, but in F\# they are better known as ``discriminated unions''. I will make 
-\end{itemize}
-\end{frame}
-
 \begin{frame}{Learning outcomes}
 \begin{itemize}
-	\item You will get basic familiarity with the ideas behind all dependently typed languages.
-	\item You will learn about all the different kinds of dependent types and what they are good for.
 	\item You won't be scared of all those obscure, scary and mysterious names and notations.
+	\item You will get basic familiarity with the ideas behind dependent types.
 	\item You will begin to see logic and mathematics in a very different light, much closer to your day job (at least if you are a programmer working in F\#).
 	\item If you do the exercises, you will gain a basic proficiency in F*.
 \end{itemize}
 \end{frame}
-
-\frame{\tableofcontents}
 
 \begin{frame}{Introducing F*}
 \begin{itemize}
@@ -62,15 +61,31 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Useful links}
+\begin{frame}{Don't worry, be happy, ask questions}
+\begin{center}
+	\color{red}
+	I KNOW YOU DIDN'T UNDERSTAND THE PREVIOUS SLIDE, BUT BY THE END OF THESE TALKS, YOU WILL!
+\end{center}
+\end{frame}
+
+\begin{frame}{Useful F* links}
 \begin{itemize}
-	\item \textbf{Repo with all lecture materials}: \url{https://github.com/wkolowski/Dependent-Types-and-Theorem-Proving}
 	\item \textbf{You can run F* inside your browser} (and have a nice tutorial guide you): \url{http://www.fstar-lang.org/tutorial/}
 	\item GitHub: \url{https://github.com/FStarLang/FStar}
 	\item Homepage: \url{http://www.fstar-lang.org/}
 	\item Download: \url{http://www.fstar-lang.org/\#download}
 	\item Papers (not approachable for ordinary mortals): \url{http://www.fstar-lang.org/\#papers}
 	\item Talks/presentations (more approachable): \url{http://www.fstar-lang.org/\#talks} (some of these are quite approachable if you're interested)  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Prerequisites}
+\begin{itemize}
+	\item To understand what we will be talking about, you should have a working knowledge of F\# and the basic concepts of functional programming, namely:
+	\item Functions as first-class citizens, including higher-order functions.
+	\item Algebraic data types, including sum types and product types.
+	\item Pattern matching and recursion.
+	\item Even if you know these, you may be unfamiliar with the particular names -- for example, ``sum types'' is a name used in academia and Haskell, but in F\# they are better known as ``tagged unions''.
 \end{itemize}
 \end{frame}
 
