@@ -51,7 +51,7 @@ let snd' (#a : Type) (#b : a -> Type) (p : (x : a & b x)) : b (fst' p) =
 // an earlier question which asks about the presupposition and then provide
 // an additional answer to the main question, like "Not Applicable".
 
-type pizzaReason = NotApplicable | ItsCheap | ItsTasty | Other
+type pizzaReason = | NotApplicable | ItsCheap | ItsTasty | Other
 
 type pizzaForm =
 {
@@ -82,7 +82,7 @@ let evilAnswer2 : pizzaForm =
 // to rule out the incorrect answer combinations.
 
 let validPizzaForm (f : pizzaForm) : bool =
-    match doYouLikePizza f, whyDoYouLikePizza f with
+    match f.doYouLikePizza, f.whyDoYouLikePizza with
     | true, NotApplicable  -> false
     | true, _              -> true
     | false, NotApplicable -> true
@@ -98,7 +98,7 @@ let validPizzaForm (f : pizzaForm) : bool =
 // precisely in what way.
 
 // We don't need NotApplicable anymore, so we make a new type.
-type pizzaReason' = ItsCheap' | ItsTasty' | Other'
+type pizzaReason' = | ItsCheap' | ItsTasty' | Other'
 
 type dependentPizzaForm =
 {
@@ -133,8 +133,8 @@ let dislike : dependentPizzaForm =
 // constructor.
 
 type algebraicPizzaForm =
-    | DoesntLikePizza
-    | LikesPizza (r : pizzaReason')
+    | DoesntLikePizza : algebraicPizzaForm
+    | LikesPizza      : (r : pizzaReason') -> algebraicPizzaForm
 
 // But this works only because we're dealing with a single, simple question.
 // If we wanted to model a question with more complicated presuppositions or
@@ -159,7 +159,7 @@ type covidSubform =
 }
 
 // We will also have a subform that asks about programming.
-type progLang = | Haskell | Fsharp | Python | Cpp | Other
+type progLang = | Haskell | Fsharp | Python | Cpp | OtherLang
 
 type programmingSubform =
 {
@@ -229,9 +229,28 @@ let me : bigForm =
         isProgrammingYourDailyJob = true;
         whatDoYouUseAtWork = Fsharp;
         doYouKnowHaskell = true;
-        favouriteLang  = Other;
+        favouriteLang  = OtherLang;
     };
 
     covidStatus = Healthy;
     covidSubform = ();
+}
+
+let not_me : bigForm =
+{
+    firstName = "Jonathan";
+
+    nationality = American;
+    id = "Not gonna disclose this either";
+
+    areYouAProgrammer = false;
+    programmingSubform = ();
+
+    covidStatus = Ill;
+    covidSubform =
+    {
+        wereYouHospitalized = true;
+        forHowManyDays = 60;
+        willYouVaccinate = false;
+    };
 }

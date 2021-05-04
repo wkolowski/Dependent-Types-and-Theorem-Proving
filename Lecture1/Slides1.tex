@@ -7,7 +7,7 @@
 
 \title{Dependent Types and Theorem Proving: \\Introduction to Dependent Types}
 \author{Wojciech Kołowski}
-\date{March 2021}
+\date{May 2021}
 
 \usetheme{Darmstadt}
 
@@ -56,7 +56,7 @@
 	\item Dependent types.
 	\item Refinement types.
 	\item Effect system.
-	\item Not a .NET language.
+	%\item Not a .NET language.
 	\item Neither compiled nor interpreted -- it's a proof assistant, i.e. just a typechecker.
 	\item To run a program, it has to be extracted to some other language, like F\#, OCaml, C or WASM, and then compiled.
 \end{itemize}
@@ -77,7 +77,7 @@
 \begin{frame}{Code snippet no 1 - basics of F*}
 \begin{itemize}
 	\item We will now see some code that shows how these prerequisites look in F* (hint: basically the same as in F\#).
-	\item See the file \texttt{Lecture1/Prerequisites.fst}.
+	\item See the file \texttt{Lecture1/Code/Prerequisites.fst}.
 \end{itemize}
 \end{frame}
 
@@ -150,12 +150,11 @@
 \end{itemize}
 \end{frame}
 
-\section{Idea}
+\section{The Universe}
 
 \begin{frame}{Values and types}
 \begin{itemize}
-	\item To understand dependent types, first we have to understand \textbf{dependency}.
-	\item And to understand dependency, we need to be aware of the distinction between \textbf{values} and \textbf{types}.
+	\item To understand dependent types, first we have to be aware of the distinction between \textbf{values} and \textbf{types} that is present in all the usual mainstream programming languages.
 	\item By \textbf{values}, we mean the bread-and-butter of programming: numbers, strings, arrays, lists, functions, etc.
 	\item It should be pretty obvious to you that in most languages, \textbf{types} are not of the same status as numbers or functions.
 \end{itemize}
@@ -174,16 +173,13 @@
 \begin{itemize}
 	\item There's yet another kind of dependency, which is not present in F\#, but is present in F* and is the topic of this lecture.
 	\item \textbf{Types can depend on values}: \textbf{dependent types}.
-	\item But what are dependent types good for? You have been living your whole life without them, after all!
+	\item Given a functional language like F\#, how to enable types to depend on values?
+	\item Of course we want to retain the other kinds of dependencies (values on values, values on types, types on types).
 \end{itemize}
 \end{frame}
 
-\section{The Universe}
-
 \begin{frame}{Juggling dependencies}
 \begin{itemize}
-	\item Given a functional language like F\#, how to enable types to depend on values?
-	\item Of course we want to retain the other kinds of dependencies (values on values, values on types, types on types).
 	\item It turns out it's best \textbf{throw away all kinds of dependencies besides the basic one} (values on values)\dots
 	\item \dots and then \textbf{turn types into values}!
 	\item In other words: we want to make types first-class citizens of our language.
@@ -238,16 +234,7 @@
 \begin{frame}{Code snippet no 2 - first-class types in F*}
 \begin{itemize}
 	\item It might a bit difficult to wrap your head around the idea of first-class types, so let's see how it plays out in F*.
-	\item The code snippet can be found in \m{Lecture1/FirstClassTypes.fst}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{So far so good}
-\begin{itemize}
-	\item So far so good, but we still don't know how dependent types work.
-	\item We saw some in the examples, but they were left unexplained.
-	\item We also saw some more in the last code snippet, but those were the crudest and most primitive dependent types in existence.
-	\item \textbf{Now that we have learned about first-class types and the universe of types, we can learn dependent types proper}.
+	\item The code snippet can be found in \m{Lecture1/Code/FirstClassTypes.fst}
 \end{itemize}
 \end{frame}
 
@@ -298,7 +285,7 @@
 \begin{frame}{Code snippet no 3 - dependent functions in F*}
 \begin{itemize}
 	\item Let's see how to use dependent functions in F*.
-	\item See the code snippet \m{Lecture1/DependentFunctions.fst}
+	\item See the code snippet \m{Lecture1/Code/DependentFunctions.fst}
 \end{itemize}
 \end{frame}
 
@@ -347,7 +334,7 @@
 \begin{frame}{Code snippet no 4 - dependent records in F*}
 \begin{itemize}
 	\item Let's see how dependent records work in F*.
-	\item See the code snippet \m{Lecture1/DependentRecords.fst}
+	\item See the code snippet \m{Lecture1/Code/DependentRecords.fst}
 \end{itemize}
 \end{frame}
 
@@ -386,11 +373,9 @@
 \begin{frame}{Code snippet no 5 - inductive families in F*}
 \begin{itemize}
 	\item Let's see how inductive families work in F*.
-	\item See the code snippet \m{Lecture1/InductiveFamilies.fst}
+	\item See the code snippet \m{Lecture1/Code/InductiveFamilies.fst}
 \end{itemize}
 \end{frame}
-
-\section{Refinements}
 
 \begin{frame}{Summary}
 \begin{itemize}
@@ -400,7 +385,62 @@
 	\item Dependent functions which are just like ordinary functions, but their output TYPE can depend on the VALUE of their input.
 	\item Dependent record types are just like ordinary records, but the TYPES of later fields can depend on the VALUE of earlier fields.
 	\item Inductive families are just like ordinary inductive types, but the TYPES in the family can depend on the VALUE of the index.
-	\item Refinement types are created from other types by specifying an additional property that all elements of the refinement type should satisfy.
+\end{itemize}
+\end{frame}
+
+\section{Refinement types}
+
+\begin{frame}{The problem of richness}
+\begin{itemize}
+    \item In dependently typed languages there is a lot of types.
+    \item This is a blessing, because we can express all the complicated types and properties we need in order to guarantee correctness of our programs.
+    \item But the richness of types also causes problems: it is often the case that there are many ways to define essentially the same type.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The various faces of a \m{vec}tor 1/2}
+\begin{itemize}
+    \item We have already seen two incarnations of the type \m{vec a n} of vectors:
+    \item Functional, recursive: by recursion on the index.
+    \item Inductive, intrinsic: as an inductive family.
+    \item But there are at least two more definitions:
+    \item Functional, nonrecursive: as a function with domain \m{fin n}.
+    \item Inductive, extrinsic: as a pair of a list and a proof that it's length is equal to \m{n}.
+    \item \textbf{Which one should we use?}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The various faces of a \m{vec}tor 2/2}
+\begin{itemize}
+	\item A summary of cons of each:
+	\item Functional, recursive: ugly.
+	\item Inductive, intrinsic: code duplication -- it is necessary to reimplement common list functions (append, map, etc.).
+    \item Functional, nonrecursive: ugly, higher-order representation, very difficult to implement functions (try to implement append if you don't believe me).
+    \item Inductive, extrinsic: a lot of boilerplate concerned with passing proofs around; need to reimplement list functions by wrapping them.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Refinement types}
+\begin{itemize}
+    \item \textbf{Refinement types are NOT dependent types!}
+    \item A refinement is just a different name for a function that returns bool.
+    \item A refinement type is a type paired with a refinement.
+    \item In F* syntax: \m{x : a{p x}} where \m{p : a -> bool}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Code snippet no 6 - refinement types in F*}
+\begin{itemize}
+	\item Let's see how refinement types work in F*.
+	\item See the code snippet \m{Lecture1/Code/Refinements.fst}
+\end{itemize}
+\end{frame}
+
+\section{Exercises}
+
+\begin{frame}{Exercises}
+\begin{itemize}
+	\item \textbf{TODO}
 \end{itemize}
 \end{frame}
 
