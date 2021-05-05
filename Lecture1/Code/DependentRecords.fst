@@ -2,7 +2,7 @@ module DependentRecords
 
 open FStar.String
 
-// 1. Dependent pairs.
+// 1. Ordinary pairs.
 
 // An ordinary pair.
 let p : int * string = (42, "42")
@@ -15,6 +15,8 @@ let s = snd p
 let concat (p : int * string) : string =
     match p with
     | (n, s) -> string_of_int n ^ s
+
+// 2. Dependent pairs.
 
 // A dependent pair - the TYPE of the second component depends on the
 // VALUE of the first component.
@@ -33,6 +35,8 @@ let snd' (#a : Type) (#b : a -> Type) (p : (x : a & b x)) : b (fst' p) =
 
 // Defining projections for iterated dependent pairs is SO ANNOYING I won't
 // even try to do it. It's much easier to use dependent records instead.
+
+
 
 // 2. Dependent records.
 
@@ -144,7 +148,16 @@ type algebraicPizzaForm =
 // dependencies, this gives us a nice ability to include or exclude nested
 // subforms based on answers to previous questions. Let's see a bigger example.
 
-// We will have a subform that asks about covid.
+// We will ask about some personal data.
+type nationality = | American | Polish
+
+// SSN is the American Social Security Number and PESEL is a similar thing for
+// Poland. We define them as nat/string just to show that the type of ID we
+// ask for can depend on the nationality.
+let ssn : Type = nat
+let pesel : Type = string
+
+// We will have a subforms that ask about covid and vaccines.
 type covidStatus = | Healthy | Ill | Recovered | Dead
 
 type covidSubform =
@@ -154,8 +167,18 @@ type covidSubform =
         (match wereYouHospitalized with
          | true  -> nat
          | false -> unit);
-    
+}
+
+type vaccineCompany = | Pfizer | Moderna | AstraZeneca
+
+type vaccineSubform =
+{
     willYouVaccinate : bool;
+    
+    whatVaccine :
+        (match willYouVaccinate with
+            | true -> vaccineCompany
+            | false -> unit);
 }
 
 // We will also have a subform that asks about programming.
@@ -164,22 +187,22 @@ type progLang = | Haskell | Fsharp | Python | Cpp | OtherLang
 type programmingSubform =
 {
     isProgrammingYourDailyJob : bool;
+    
     whatDoYouUseAtWork :
-        (match isProgrammingYourDailyJob with
+        normalize (match isProgrammingYourDailyJob with
          | true  -> progLang
          | false -> unit);
 
-    doYouKnowHaskell : bool;
+    doYouKnowHaskell :
+        (match isProgrammingYourDailyJob with
+            | true ->
+                (match normalize whatDoYouUseAtWork with
+                    | Haskell -> unit
+                    | _       -> bool)
+            | false -> bool);
+
     favouriteLang : progLang;
 }
-
-// And we will ask about some personal data.
-type nationality = | Polish | American
-
-// SSN is the American Social Security Number and PESEL is a similar thing for
-// Poland. We define both as string because this is just an example.
-let ssn : Type = string
-let pesel : Type = string
 
 type bigForm =
 {

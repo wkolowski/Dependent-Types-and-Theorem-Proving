@@ -219,7 +219,6 @@
 \end{itemize}
 \end{frame}
 
-%\begin{frame}{Computing with first-class types}
 \begin{frame}{Type families}
 \begin{itemize}
 	\item In the coming slides, we will often refer to \textbf{type families}.
@@ -234,7 +233,7 @@
 \begin{frame}{Code snippet no 2 - first-class types in F*}
 \begin{itemize}
 	\item It might a bit difficult to wrap your head around the idea of first-class types, so let's see how it plays out in F*.
-	\item The code snippet can be found in \m{Lecture1/Code/FirstClassTypes.fst}
+	\item The code snippet can be found in \m{Lecture1/Code/Universe.fst}
 \end{itemize}
 \end{frame}
 
@@ -436,14 +435,6 @@
 \end{itemize}
 \end{frame}
 
-\section{Exercises}
-
-\begin{frame}{Exercises}
-\begin{itemize}
-	\item \textbf{TODO}
-\end{itemize}
-\end{frame}
-
 \section{Life of Pi}
 
 \begin{frame}{Pi type and multiplication}
@@ -486,6 +477,14 @@
 	\item This corresponds to the polynomial $F(X) = 1 + A \times X$.
 	\item $\m{List}(A)$ is the least fixed point of this polynomial, i.e. the smallest type $X$ that satisfies $F(X) = X$.
 	\item Here ``fixed point'' corresponds to the fact that we create lists using constructors (\m{nil} and \m{cons}), whereas ``least'' corresponds to the fact that all lists are made of finitely many constructors.
+\end{itemize}
+\end{frame}
+
+\section{Exercises}
+
+\begin{frame}{Exercises}
+\begin{itemize}
+	\item \textbf{TODO}
 \end{itemize}
 \end{frame}
 

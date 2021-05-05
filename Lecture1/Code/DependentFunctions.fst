@@ -20,6 +20,26 @@ let silly (b : bool) : (if b then string else int) =
 // languages like Python, but here the typing is static - try to change
 // the value returned in the 'then' branch of 'silly' and see what F* tells you.
 
+// This is not well-typed, because for b = false we return a string, whereas
+// an int was expected.
+[@@ expect_failure]
+let silly2 (b : bool) : (if b then string else int) =
+    "Always a string"
+
+// Similarly, this is not well-typed because for b = true we return an int,
+// but a string was expected.
+[@@ expect_failure]
+let silly3 (b : bool) : (if b then string else int) =
+    1234567890
+
+// This one is not well-typed too. For b = true we return an int, but a string
+// was expected. For b = false, we return a string, but an int was expected.
+[@@ expect_failure]
+let silly2 (b : bool) : (if b then string else int) =
+    if b
+    then 15
+    else "a string"
+
 
 
 // In F*, dependent functions are ubiquitous. They are used for everything,
@@ -136,9 +156,25 @@ let printf (format : string) : typeOfPrintf (list_of_string format) =
 
 // We can call printf only with the right number of arguments of the correct
 // type. Anything else will end with a type error.
-let s = printf "%d + %d = %d" 1 2 3
-let s' = printf "not %b is %b" true false
-let s'' = printf "I like trains!"
+let s1 : string = printf "%d + %d = %d" 1 2 3
+let s2 : string = printf "not %b is %b" true false
+let s3 : string = printf "I like trains!"
+
+// If the arguments we give don't match what is expected from the format string,
+// we get a type error.
+
+// Not enough arguments - 3 ints were expected, 2 ints were given.
+[@@ expect_failure]
+let s4 : string = printf "%d + %d = %d" 1 2
+
+// Last argument of the wrong type - should be bool instead of int.
+[@@ expect_failure]
+let s5 : string = printf "not %b is %b" true 42
+
+// Too many arguments.
+[@@ expect_failure]
+let s6 : string = printf "I like trains!" 1234567890
+
 
 // Note that the format string needs not be known at compile time. It can be
 // provided at runtime, but it will be pretty difficult to call printf with
@@ -216,9 +252,7 @@ assume val logout : dataStore LoggedIn -> dataStore LoggedOut
 // user has to provide an username and a password. So, we need a function for
 // validating passwords.
 let validate (username password : string) : bool =
-    if username = "K" && password = "MenInBlack"
-    then true
-    else false
+    username = "K" && password = "MenInBlack"
 
 // To log in, the user gives his password and username. Note that it is only
 // possible to log in to a data store for which the user is logged out at first
@@ -263,6 +297,17 @@ let unauthorized : data =
     let topSecret = readTopSecretData ds in
     let _ = disconnect ds in
     topSecret
+
+(*
+    The error message we get is this:
+    
+    (Error 189) Expected expression of type
+    "DependentFunctions.dataStore (DependentFunctions.LoggedIn)";
+    got expression "ds" of type
+    "DependentFunctions.dataStore (DependentFunctions.LoggedOut)"
+*)
+
+
 
 // When should we use the above technique? It's particularly useful for
 // designing libraries, APIs etc. which will then be used by some external

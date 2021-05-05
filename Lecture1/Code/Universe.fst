@@ -54,6 +54,28 @@ let rec vec (a : Type) (n : nat) : Type =
 let example_vec : vec nat 4 =
     (0, (1, (2, (3, ()))))
 
+// If we try to pretend that a vector of length 4 has type vec nat 3,
+// we will get a type error.
+[@@ expect_failure]
+let example_vec_3 : vec nat 3 =
+    (0, (1, (2, (3, ()))))
+
+(*
+    The exact error message we get is this:
+
+    (Error 19) Subtyping check failed; expected type
+    Universe.vec Prims.nat (3 - 1 - 1 - 1);
+    got type Prims.int * Prims.unit;
+    The SMT solver could not prove the query,
+    try to spell your proof in more detail or increase fuel/ifuel
+*)
+
+// Basically, it says that F* expects a value of type vec nat 0,
+// but we have provided a value of type int * unit. This means
+// that our vector is too long!
+
+
+
 // A matrix is just a vector of vectors.
 let matrix (a : Type) (n m : nat) : Type =
     vec (vec a m) n
@@ -65,3 +87,24 @@ let idmatrix3by3 : matrix int 3 3 =
     ((0, (1, (0, ()))),
     ((0, (0, (1, ()))),
     ())))
+
+// Again, if we try to pretend that a 2 by 2 matrix has type matrix int 3 3,
+// we will get a type error.
+[@@ expect_failure]
+let idmatrix2by2 : matrix int 3 3 =
+    ((1, (0, ())),
+    ((0, (1, ())),
+    ()))
+
+(*
+   The exact error message is as follows:
+
+   (Error 19) Subtyping check failed; expected type
+   Universe.vec Prims.int (3 - 1 - 1); got type Prims.unit; The SMT solver
+   could not prove the query, try to spell your proof in more detail or
+   increase fuel/ifuel
+*)
+
+// It basically says that the typechecker expected a vector of length 1, but
+// got a () of type unit, which means that our matrix is too small to be a
+// 3 by 3 matrix.
