@@ -16,12 +16,34 @@ let concat (p : int * string) : string =
     match p with
     | (n, s) -> string_of_int n ^ s
 
+
+
 // 2. Dependent pairs.
 
 // A dependent pair - the TYPE of the second component depends on the
 // VALUE of the first component.
-let p' : b : bool & (if b then nat else string) =
+let p1 : (b : bool & (if b then int else string)) =
     (| false, "false" |)
+
+let p2 : (b : bool & (if b then int else string)) =
+    (| true, -1234567890 |)
+
+// Note that this looks similar to what can be done in dynamically typed
+// languages like Python, but here the typing is static - let's try to change
+// the value of the second component of the pair and see what happens.
+
+// This is not well-typed, because for b = false the second component should
+// be a string, not an int.
+// an int was expected.
+[@@ expect_failure]
+let p3 : (b : bool & (if b then int else string)) =
+    (| false, 123 |)
+
+// Similarly, this is not well-typed because for b = true we return a string,
+// but an int was expected.
+[@@ expect_failure]
+let p4 : (b : bool & (if b then int else string))  =
+    (| true, "hello there" |)
 
 // There are no built-in projections for dependent pairs, but we can
 // define them using pattern matching.
@@ -154,13 +176,14 @@ type nationality = | American | Polish
 // SSN is the American Social Security Number and PESEL is a similar thing for
 // Poland. We define them as nat/string just to show that the type of ID we
 // ask for can depend on the nationality.
-let ssn : Type = nat
+let ssn : Type = int
 let pesel : Type = string
 
-// We will have a subforms that ask about covid and vaccines.
+// We will have two subforms that ask about covid hospitalization and vaccines,
+// depending on the person's current covid status.
 type covidStatus = | Healthy | Ill | Recovered | Dead
 
-type covidSubform =
+type hospitalizationSubform =
 {
     wereYouHospitalized : bool;
     forHowManyDays :
@@ -169,7 +192,7 @@ type covidSubform =
          | false -> unit);
 }
 
-type vaccineCompany = | Pfizer | Moderna | AstraZeneca
+type vaccineCompany = | Pfizer | Moderna | AstraZeneca | Whatever
 
 type vaccineSubform =
 {
@@ -181,7 +204,8 @@ type vaccineSubform =
             | false -> unit);
 }
 
-// We will also have a subform that asks about programming.
+// We will also have a subform that asks about programming and particularly
+// whether the person knows Haskell.
 type progLang = | Haskell | Fsharp | Python | Cpp | OtherLang
 
 type programmingSubform =
@@ -189,19 +213,22 @@ type programmingSubform =
     isProgrammingYourDailyJob : bool;
     
     whatDoYouUseAtWork :
-        normalize (match isProgrammingYourDailyJob with
+        (match isProgrammingYourDailyJob with
          | true  -> progLang
          | false -> unit);
 
+    favouriteLang : progLang;
+
     doYouKnowHaskell :
-        (match isProgrammingYourDailyJob with
+        (match favouriteLang with
+            | Haskell -> unit
+            | _       -> bool);
+        (*(match isProgrammingYourDailyJob with
             | true ->
-                (match normalize whatDoYouUseAtWork with
+                normalize (match whatDoYouUseAtWork with
                     | Haskell -> unit
                     | _       -> bool)
-            | false -> bool);
-
-    favouriteLang : progLang;
+            | false -> bool);*)
 }
 
 type bigForm =
@@ -235,8 +262,9 @@ type bigForm =
     covidStatus : covidStatus;
     covidSubform :
         (match covidStatus with
-         | Ill | Recovered -> covidSubform
-         | _               -> unit);
+         | Healthy         -> vaccineSubform
+         | Ill | Recovered -> hospitalizationSubform
+         | Dead            -> unit);
 }
 
 let me : bigForm =
@@ -251,12 +279,16 @@ let me : bigForm =
     {
         isProgrammingYourDailyJob = true;
         whatDoYouUseAtWork = Fsharp;
-        doYouKnowHaskell = true;
         favouriteLang  = OtherLang;
+        doYouKnowHaskell = true;
     };
 
     covidStatus = Healthy;
-    covidSubform = ();
+    covidSubform =
+    {
+        willYouVaccinate = true;
+        whatVaccine = Whatever;
+    };
 }
 
 let not_me : bigForm =
@@ -264,7 +296,7 @@ let not_me : bigForm =
     firstName = "Jonathan";
 
     nationality = American;
-    id = "Not gonna disclose this either";
+    id = 124567890;
 
     areYouAProgrammer = false;
     programmingSubform = ();
@@ -273,7 +305,39 @@ let not_me : bigForm =
     covidSubform =
     {
         wereYouHospitalized = true;
-        forHowManyDays = 60;
-        willYouVaccinate = false;
+        forHowManyDays = 360;
+    };
+}
+
+[@@ expect_failure]
+let bad_fill : bigForm =
+{
+    firstName = "asdf";
+
+    nationality = American;
+
+    // Wrong type, for Americans this should be an int!
+    id = "lalalala";
+
+    areYouAProgrammer = false;
+
+    // Wrong type - non-programmers can't answer these questions!
+    programmingSubform =
+    {
+        isProgrammingYourDailyJob = true;
+        whatDoYouUseAtWork = Fsharp;
+        favouriteLang  = Haskell;
+
+        // Not possible not to know Haskell when it's your favourite lang.
+        doYouKnowHaskell = false;
+    };
+
+    covidStatus = Healthy;
+
+    // Wrong subform!
+    covidSubform =
+    {
+        wereYouHospitalized = true;
+        forHowManyDays = 100;
     };
 }

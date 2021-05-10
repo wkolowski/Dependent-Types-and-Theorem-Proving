@@ -17,8 +17,8 @@ let silly (b : bool) : (if b then string else int) =
 // some value of the appropriate type.
 
 // Note that this looks similar to what can be done in dynamically typed
-// languages like Python, but here the typing is static - try to change
-// the value returned in the 'then' branch of 'silly' and see what F* tells you.
+// languages like Python, but here the typing is static - let's try to change
+// the value returned by 'silly' and see what F* tells us.
 
 // This is not well-typed, because for b = false we return a string, whereas
 // an int was expected.
