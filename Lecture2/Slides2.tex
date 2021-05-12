@@ -1,5 +1,22 @@
 \documentclass{beamer}
 
+\usepackage{xcolor}
+
+\newcommand{\m}[1]{\texttt{#1}}
+\newcommand{\e}[1]{\textbf{#1}}
+
+\newcommand{\notb}[1]{not #1}
+\newcommand{\andb}[2]{#1 \&\& #2}
+\newcommand{\orb}[2]{#1 || #2}
+\newcommand{\implb}[2]{#1 ==> #2}
+\newcommand{\iffb}[2]{#1 <=> #2}
+
+\newcommand{\mnotb}[1]{\m{\notb{#1}}}
+\newcommand{\mandb}[2]{\m{\andb{#1}{#2}}}
+\newcommand{\morb}[2]{\m{\orb{#1}{#2}}}
+\newcommand{\mimplb}[2]{\m{\implb{#1}{#2}}}
+\newcommand{\miffb}[2]{\m{\iffb{#1}{#2}}}
+
 \title{Dependent Types and Theorem Proving: \\Proving is programming in disguise}
 \author{Wojciech Kołowski}
 \date{March 2021}
@@ -9,7 +26,42 @@
 \begin{document}
 
 \frame{\titlepage}
+
+\begin{frame}{Plan of lectures}
+\begin{itemize}
+	\item Lecture 1: Programming with dependent types.
+	\item \textbf{Lecture 2: Proving theorems with dependent types.}
+	\item Lecture 3: Differences between programming and proving.
+	\item Lecture 4: Examples of bigger programs and longer proofs.
+	\item Lecture 5: A deeper dive into F*.
+\end{itemize}
+\end{frame}
+
 \frame{\tableofcontents}
+
+\section{Introduction: boolean logic and classical logic}
+
+\begin{frame}{The booleans and their logic}
+\begin{itemize}
+	\item Being a programmer, you are good friends with the booleans, aren't you?
+	\item There are two booleans, \m{true} and \m{false}.
+	\item We can combine booleans \m{b} and \m{c} with the usual boolean functions:
+	\item \mnotb{b} -- negation, pronounced ``not \m{b}''
+	\item \mandb{b}{c} -- conjunction, pronounced ``\m{b} and \m{c}''
+	\item \morb{b}{c} -- disjunction, pronounced ``\m{b} or \m{c}''
+	\item We can also define less commonly used boolean functions:
+	\item \m{\implb{b}{c} = \orb{\notb{b}}{c}} -- implication, pronounced ``if \m{b} then \m{c}''
+	\item \m{\iffb{b}{c} = \andb{\implb{b}{c}}{\implb{c}{b}}} -- logical equivalence, pronounced ``\m{b} if and only if \m{c}''
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Classical logic}
+\begin{itemize}
+	\item 
+\end{itemize}
+\end{frame}
+
+
 
 \section{Constructive propositional logic: you already know it}
 
