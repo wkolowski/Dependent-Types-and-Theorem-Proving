@@ -1,6 +1,7 @@
 \documentclass{beamer}
 
 \usepackage{xcolor}
+\usepackage{stmaryrd}
 
 \newcommand{\m}[1]{\texttt{#1}}
 \newcommand{\e}[1]{\textbf{#1}}
@@ -11,11 +12,15 @@
 \newcommand{\implb}[2]{#1 ==> #2}
 \newcommand{\iffb}[2]{#1 <=> #2}
 
-\newcommand{\mnotb}[1]{\m{\notb{#1}}}
-\newcommand{\mandb}[2]{\m{\andb{#1}{#2}}}
-\newcommand{\morb}[2]{\m{\orb{#1}{#2}}}
+\newcommand{\true}{\m{true}}
+\newcommand{\false}{\m{false}}
+\newcommand{\mnotb}[1]{\m{not}\ #1}
+\newcommand{\mandb}[2]{#1\ \m{\&\&}\ #2}
+\newcommand{\morb}[2]{#1\ \m{||}\ #2}
 \newcommand{\mimplb}[2]{\m{\implb{#1}{#2}}}
 \newcommand{\miffb}[2]{\m{\iffb{#1}{#2}}}
+
+\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
 
 \title{Dependent Types and Theorem Proving: \\Proving is programming in disguise}
 \author{Wojciech Kołowski}
@@ -41,7 +46,7 @@
 
 \section{Introduction: boolean logic and classical logic}
 
-\begin{frame}{The booleans and their logic}
+\begin{frame}{Boolean ``logic''}
 \begin{itemize}
 	\item Being a programmer, you are good friends with the booleans, aren't you?
 	\item There are two booleans, \m{true} and \m{false}.
@@ -49,19 +54,71 @@
 	\item \mnotb{b} -- negation, pronounced ``not \m{b}''
 	\item \mandb{b}{c} -- conjunction, pronounced ``\m{b} and \m{c}''
 	\item \morb{b}{c} -- disjunction, pronounced ``\m{b} or \m{c}''
-	\item We can also define less commonly used boolean functions:
-	\item \m{\implb{b}{c} = \orb{\notb{b}}{c}} -- implication, pronounced ``if \m{b} then \m{c}''
-	\item \m{\iffb{b}{c} = \andb{\implb{b}{c}}{\implb{c}{b}}} -- logical equivalence, pronounced ``\m{b} if and only if \m{c}''
+	%\item We can also define less commonly used boolean functions:
+	%\item \m{\implb{b}{c} = \orb{\notb{b}}{c}} -- implication, pronounced ``if \m{b} then \m{c}''
+	%\item \m{\iffb{b}{c} = \andb{\implb{b}{c}}{\implb{c}{b}}} -- logical equivalence, pronounced ``\m{b} if and only if \m{c}''
+\end{itemize}
+\end{frame}
+
+\begin{frame}{What is a logic}
+\begin{itemize}
+	\item Boolean logic is not an example of what logicians call a ``logic'', in the sense that it is not a ``logical system'', but merely a type with some unary and binary functions on it.
+	\item A logic usually consists of:
+	\item A definition of what \textbf{propositions} we're dealing with.
+	\item A \textbf{semantics}, which tells us what these propositions mean.
+	\item A \textbf{proof system}, which tells us which propositions can be proven and disproven.
+	\item A \textbf{soundness theorem} which states that propositions proven true using the proof system are semantically true.
+	\item Optionally, there may also be a \textbf{completeness theorem}which states that all semantically true propositions can be proven.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Propositions}
+\begin{itemize}
+	\item Propositions ($\phi, \psi$) are defined as follows:
+	\item $\top$ -- the true proposition.
+	\item $\bot$ -- the false proposition.
+	\item $P, Q, R, \dots$ -- propositional variables.
+	\item $\neg P$ -- negation, read ``not $P$''.
+	\item $P \lor Q$ -- disjunction, read ``$P$ or $Q$''.
+	\item $P \land Q$ -- conjunction, read ``$P$ and $Q$''.
+	\item $P \implies Q$ -- implication, read ``$P$ implies $Q$''.
+	\item $P \iff Q$ -- logical equivalence, read ``$P$ if and only if $Q$''.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Classical logic}
 \begin{itemize}
-	\item 
+	\item Classical logic is the most widely known/taught/used logical system in the world.
+	\item We think of propositions as being either true or false.
+	\item Therefore, classical logic is the logic in which \textbf{the truth values are booleans.}
+	\item The truth value of propositional variables is determined by a \textbf{valuation} $v : \text{Var} \to \text{Bool}$.
+	\item If $v(P) = \true$, then $P$ is considered to be true.
+	\item Otherwise it's considered false.
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Semantics of classical logic}
+\begin{itemize}
+	\item Given a valuation $v : \text{Var} \to \text{Bool}$, the truth value of a proposition can be determined with a recursive function $\sem{-} : \text{Prop} \to \text{Bool}$:
+	\item $\sem{\top} = \true$
+	\item $\sem{\bot} = \false$
+	\item $\sem{P} = v(P)$, where $P$ is a variable.
+	\item $\sem{\neg \phi} = \mnotb{\sem{\phi}}$
+	\item $\sem{\phi \lor \psi} = \morb{\sem{\phi}}{\sem{\psi}}$
+	\item $\sem{\phi \land \psi} = \mandb{\sem{\phi}}{\sem{\psi}}$
+	\item $\sem{\phi \implies \psi} = \morb{(\mnotb{\sem{\phi}})}{\sem{\psi}}$
+	\item $\sem{\phi \iff \psi} = \sem{\phi}\ \m{==}\ \sem{\psi}$
+\end{itemize}
+\end{frame}
 
+\begin{frame}{Constructive logic}
+\begin{itemize}
+	\item Constructive logic is a logical system different from classical logic.
+	\item It will serve us to prove correctness of our programs.
+	\item We \textbf{DO NOT} think of propositions as being either true or false.
+	\item Instead, we think in terms of \textbf{truth certificates}. If we have a certificate of truth for the proposition $\psi$, then $\psi$ is true. Otherwise, we don't know anything about $\psi$.
+\end{itemize}
+\end{frame}
 
 \section{Constructive propositional logic: you already know it}
 
