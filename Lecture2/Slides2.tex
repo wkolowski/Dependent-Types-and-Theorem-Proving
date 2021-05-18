@@ -24,7 +24,7 @@
 
 \title{Dependent Types and Theorem Proving: \\Proving is programming in disguise}
 \author{Wojciech Kołowski}
-\date{March 2021}
+\date{May 2021}
 
 \usetheme{Darmstadt}
 
@@ -44,16 +44,16 @@
 
 \frame{\tableofcontents}
 
-\section{Introduction: boolean logic and classical logic}
+\section{Introduction}
 
 \begin{frame}{Boolean ``logic''}
 \begin{itemize}
 	\item Being a programmer, you are good friends with the booleans, aren't you?
 	\item There are two booleans, \m{true} and \m{false}.
 	\item We can combine booleans \m{b} and \m{c} with the usual boolean functions:
-	\item \mnotb{b} -- negation, pronounced ``not \m{b}''
-	\item \mandb{b}{c} -- conjunction, pronounced ``\m{b} and \m{c}''
-	\item \morb{b}{c} -- disjunction, pronounced ``\m{b} or \m{c}''
+	\item \mnotb{b} -- ``not \m{b}''
+	\item \mandb{b}{c} -- ``\m{b} and \m{c}''
+	\item \morb{b}{c} -- ``\m{b} or \m{c}''
 	%\item We can also define less commonly used boolean functions:
 	%\item \m{\implb{b}{c} = \orb{\notb{b}}{c}} -- implication, pronounced ``if \m{b} then \m{c}''
 	%\item \m{\iffb{b}{c} = \andb{\implb{b}{c}}{\implb{c}{b}}} -- logical equivalence, pronounced ``\m{b} if and only if \m{c}''
@@ -68,13 +68,23 @@
 	\item A \textbf{semantics}, which tells us what these propositions mean.
 	\item A \textbf{proof system}, which tells us which propositions can be proven and disproven.
 	\item A \textbf{soundness theorem} which states that propositions proven true using the proof system are semantically true.
-	\item Optionally, there may also be a \textbf{completeness theorem}which states that all semantically true propositions can be proven.
+	\item Optionally, there may also be a \textbf{completeness theorem} which states that all semantically true propositions can be proven.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Propositions}
 \begin{itemize}
-	\item Propositions ($\phi, \psi$) are defined as follows:
+	\item A proposition asserts that something is the case, irrespectively of whether this really is the case or not.
+	\item Real world example: ``It's raining or I like trains.''
+	\item Math example: ``$4$ is a prime number.''
+	\item Software example: ``For each input string $x$, if $x$ is not malformed, my program produces as output an array of length at most $10$.''
+	\item Hardware example: ``This circuit implements addition of 16 bit integers.''
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Propositional constants and connectives}
+\begin{itemize}
+	\item Propositions (usual letters: $P, Q, R$) are defined as follows:
 	\item $\top$ -- the true proposition.
 	\item $\bot$ -- the false proposition.
 	\item $P, Q, R, \dots$ -- propositional variables.
@@ -89,17 +99,17 @@
 \begin{frame}{Classical logic}
 \begin{itemize}
 	\item Classical logic is the most widely known/taught/used logical system in the world.
-	\item We think of propositions as being either true or false.
-	\item Therefore, classical logic is the logic in which \textbf{the truth values are booleans.}
-	\item The truth value of propositional variables is determined by a \textbf{valuation} $v : \text{Var} \to \text{Bool}$.
+	\item In classical logic, \textbf{we think of propositions as being either true or false.}
+	\item Therefore, classical logic is the logic in which truth values are the booleans.
+	\item The truth value of a propositional variable is determined by a \textbf{valuation} $v : \text{Var} \to \text{Bool}$.
 	\item If $v(P) = \true$, then $P$ is considered to be true.
 	\item Otherwise it's considered false.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Semantics of classical logic}
+\begin{frame}{Semantics of classical logic 1/2}
 \begin{itemize}
-	\item Given a valuation $v : \text{Var} \to \text{Bool}$, the truth value of a proposition can be determined with a recursive function $\sem{-} : \text{Prop} \to \text{Bool}$:
+	\item Given a valuation $v : \text{Var} \to \text{Bool}$, the truth value of a proposition can be determined with a recursive function $\sem{-} : \text{Prop} \to \text{Bool}$.
 	\item $\sem{\top} = \true$
 	\item $\sem{\bot} = \false$
 	\item $\sem{P} = v(P)$, where $P$ is a variable.
@@ -111,28 +121,59 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Constructive logic}
+\begin{frame}{Semantics of classical logic 2/2}
 \begin{itemize}
-	\item Constructive logic is a logical system different from classical logic.
-	\item It will serve us to prove correctness of our programs.
-	\item We \textbf{DO NOT} think of propositions as being either true or false.
-	\item Instead, we think in terms of \textbf{truth certificates}. If we have a certificate of truth for the proposition $\psi$, then $\psi$ is true. Otherwise, we don't know anything about $\psi$.
+	\item $P$ is satisfiable when $\sem{P} = \true$ for some valuation.
+	\item $P$ is falsifiable when $\sem{P} = \false$ for some valuation.
+	\item $P$ is a tautology when $\sem{P} = \true$ for all valuations.
 \end{itemize}
 \end{frame}
 
-\section{Constructive propositional logic: you already know it}
+\begin{frame}{Example}
+\begin{itemize}
+	\item Example: the proposition $P \implies Q$ is satisfiable (for $v(P) = \true, v(Q) = \true$).
+	\item It is also falsifiable (for $v(P) = \true, v(Q) = \false$).
+	\item Therefore, it is not a tautology.
+	\item Example: the proposition $P \land Q \implies Q \land P$ is a tautology.
+	\item We have $\sem{P \land Q \implies Q \land P} = \morb{(\mnotb{\mandb{v(P)}{v(Q)}})}{(\mandb{v(P)}{v(Q)})}$.
+	\item For any values of $v(P)$ and $v(Q)$ we always get $\true$.
+\end{itemize}
+\end{frame}
 
-\subsection{Propositional logic}
-% Describe the syntax of propositional logic.
-% Explain the meaning of terms like "proposition" and
-% the natural-language meaning of logical connectives.
+\begin{frame}{The rest}
+\begin{itemize}
+	\item We can check whether a proposition is a tautology by trying all possible valuations, but there are exponentially many of them.
+	\item We can do better by defining a proof system with some axioms and inference rules, which would allow us to \textbf{prove} that a proposition is a tautology without trying all valuations.
+	\item We won't do that because \textbf{classical logic is not the right logical system for proving programs correct}.
+	\item We will use constructive logic instead.
+\end{itemize}
+\end{frame}
 
-\subsection{Propositions are types, proofs are programs}
+\section{Constructive logic: you already know it}
+
+\begin{frame}{Constructive logic}
+\begin{itemize}
+	\item In constructive logic, \textbf{propositions ARE NOT either true or false}.
+	\item In constructive logic we usually think about propositions \textbf{in terms of their proofs.}
+	\item In everyday language and also in mathematics as it is usually practiced, a ``proof'' means an argument by which one human demonstrates the truth of a statement to another human.
+	\item In constructive logic, a proof is a formal object which \textbf{certifies that the given proposition holds.}
+	\item If we have a proof of $P$, we may think of it as ``true'' (although we shouldn't think in terms of true and false).
+	\item If we have a proof of $\neg P$, we may think that $P$ is ``false''.
+	\item If we have neither proof, we don't know anything about $P$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Propositions are types, proofs are programs}
+\begin{itemize}
+	\item If $t$ is a proof of $A$, which we write as $t : A$, then we consider the proposition $A$ to be true.
+	\item Otherwise, we don't know anything about $A$.
+\end{itemize}
+\end{frame}
+
 % Explain the "propositions as types" paradigm.
 % Make sure to strongly emphasize that in this
 % interpretation logic is constructive and explain
-% what that means. Point out differences from
-% classical (i.e. boolean) logic.
+% what that means.
 
 \subsubsection{Function types are implications}
 \subsubsection{Sum is disjunction}
