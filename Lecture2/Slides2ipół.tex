@@ -45,13 +45,13 @@
 \begin{frame}{Constructive logic 2/2}
 \begin{itemize}
 	\item We shouldn't think about propositions as being either ``true'' or ``false'', but it's a deeply ingrained and hard to avoid way of thinking, so a translation:
-	\item If we have a proof of $P$, we may think of it as ``true''.
+	\item If we have a proof of $P$, we may think that $P$ is ``true''.
 	\item If we have a proof of $\neg P$, we may think that $P$ is ``false''.
 	\item If we have neither proof, we don't know anything about $P$.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Types vs propositions}
+\begin{frame}{Propositions vs types}
 \begin{itemize}
 	\item There's a strange parallel going on between propositions and types.
 	\item Types are, obviously, not either true or false -- they are inhabited by programs.
@@ -91,6 +91,8 @@
 \begin{frame}{Conjunction is the product type 1/2}
 \begin{itemize}
 	\item If \m{a} and \m{b} are types, then \m{a * b} is also a type.
+	\item Elements of \m{a * b} are pairs \m{(x, y)}, where \m{x :\ a} and \m{y :\ b}.
+	\item If we have a pair \m{x :\ a * b}, then \m{fst x :\ a} and \m{snd x :\ b}.
 \end{itemize}
 \end{frame}
 
@@ -98,7 +100,7 @@
 \begin{itemize}
 	\item If $P$ and $Q$ are propositions, then $P \land Q$ is also a proposition.
 	\item To prove $P \land Q$, we have to prove $P$ and we have to prove $Q$, so\dots
-	\item \dots proofs of $P \land Q$ are pairs of the form \m{(x, y)} -- they are pairs where \m{x} is a proof of $P$ and \m{y} is a proof of $Q$.
+	\item \dots proofs of $P \land Q$ are of the form \m{(x, y)}, i.e. they are pairs where \m{x} is a proof of $P$ and \m{y} is a proof of $Q$.
 	\item If $P \land Q$ holds, then we can conclude that $P$ holds and we can conclude that $Q$ holds, so\dots
 	\item \dots if \m{x} is a proof of $P \land Q$, then \m{fst x} is a proof of $P$ and \m{snd x} is a proof of $Q$.
 \end{itemize}
@@ -107,7 +109,7 @@
 \begin{frame}{Implication is the function type 1/2}
 \begin{itemize}
 	\item If \m{a} and \m{b} are types, then \m{a -> b} is also a type.
-	\item Elements of \m{a -> b} are of the form \m{fun (x :\ a) -> e}, i.e. they are functions which take an input \m{x} of type \m{a} and return \m{e} of type \m{b} as output.
+	\item Elements of \m{a -> b} are of the form \m{fun (x :\ a) -> e} -- they are functions which take an input \m{x} of type \m{a} and return \m{e} of type \m{b} as output.
 	\item If we have a function \m{f :\ a -> b} and an \m{x :\ a}, then we we can apply \m{f} to \m{x}, written \m{f x}, to get an element of type \m{b}.
 \end{itemize}
 \end{frame}
@@ -116,7 +118,7 @@
 \begin{itemize}
 	\item If $P$ and $Q$ are propositions, then $P \implies Q$ is also a proposition.
 	\item To prove $P \implies Q$, we need to assume that $P$ holds and then provve $Q$ under this assumption, so...
-	\item ... proofs of $P \implies Q$ are functions of the form \m{fun (p :\ P) -> q} -- they take a proof of $P$ as input and return a proof of $Q$ as output.
+	\item ... proofs of $P \implies Q$ are of the form \m{fun (p :\ P) -> q}, i.e. they are functions which take a proof of $P$ as input and return a proof of $Q$ as output.
 	\item If $P \implies Q$ holds and $P$ holds, we can conclude that $Q$ holds, so...
 	\item ... if \m{f} is a proof of $P \implies Q$ and \m{x} is a proof of $P$, then \m{f x} is a proof of $Q$.
 \end{itemize}
