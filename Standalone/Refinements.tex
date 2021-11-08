@@ -39,34 +39,30 @@
 
 \begin{frame}{The various faces of a \m{vec}tor 2/2}
 \begin{itemize}
+    \item A summary of downsides of each:
+    \item Functional, recursive: ugly.
+    \item Inductive, intrinsic: code duplication – it is necessary to reimplement common list functions (append, map, etc.).
+    \item Functional, nonrecursive: ugly, higher-order representation, very difficult to implement functions (try to implement append if you don’t believe me).
+    \item Inductive, extrinsic: a lot of boilerplate concerned with passing proofs around; need to reimplement list functions by wrapping them.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Refinement types}
+\begin{itemize}
+    \item Refinement types are NOT dependent types!
+    \item A refinement is just a different name for a function that returns bool.
+    \item A refinement type is a type paired with a refinement.
+    \item In F* syntax: \m{x \: a, p x} where \m{p \: a -> bool}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Code example no 6 - refinement types}
+\begin{itemize}
     \item To better understand what the above slide tries to tell us, let's see the various definitions in code.
     \item See the code snippet \m{Lecture1/Vectors.fst}.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{}
-\begin{itemize}
-    \item 
-\end{itemize}
-\end{frame}
-
-\begin{frame}{}
-\begin{itemize}
-    \item
-\end{itemize}
-\end{frame}
-
-\begin{frame}{}
-\begin{itemize}
-    \item
-\end{itemize}
-\end{frame}
-
-\begin{frame}{}
-\begin{itemize}
-    \item
-\end{itemize}
-\end{frame}
 % Introduce refinement types, using F* notation (i.e. x : int{x > 5}).
 % Go over the head/tail example again, but this time using refinements
 % on ordinary lists.
@@ -75,8 +71,5 @@
 % or go with ordinary inductive types and constrain them with
 % predicates using dependent pairs? Well, neither and this
 % leads us to...
-
-\section{Exercises}
-% No idea yet.
 
 \end{document}

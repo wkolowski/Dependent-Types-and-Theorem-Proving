@@ -157,36 +157,108 @@
 	\item In constructive logic, \textbf{propositions ARE NOT either true or false}.
 	\item In constructive logic we usually think about propositions \textbf{in terms of their proofs.}
 	\item In everyday language and also in mathematics as it is usually practiced, a ``proof'' means an argument by which one human demonstrates the truth of a statement to another human.
-	\item In constructive logic, a proof is a formal object which \textbf{certifies that the given proposition has been proven}, in which case we say that the propositions holds.
-	\item Meaning of propositions is determined by how we can prove them and how we can use their proofs to prove other propositions.
+	\item In constructive logic, a proof of $P$ is a certificate that $P$ holds, i.e. a formal object which \textbf{certifies that $P$ has been proven.},
+	\item Meaning of propositions is determined by how we can prove them and how we can use them to prove other propositions.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Constructive logic}
+\begin{frame}{Constructive logic 2/2}
 \begin{itemize}
-	\item If we have a proof of $P$, we may think of it as ``true'' (although we shouldn't think in terms of true and false).
+	\item We shouldn't think about propositions as being either ``true'' or ``false'', but it's a deeply ingrained and hard to avoid way of thinking, so a translation:
+	\item If we have a proof of $P$, we may think that $P$ is ``true''.
 	\item If we have a proof of $\neg P$, we may think that $P$ is ``false''.
 	\item If we have neither proof, we don't know anything about $P$.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Propositions are types, proofs are programs}
+\begin{frame}{Propositions vs types}
 \begin{itemize}
-	\item If $t$ is a proof of $A$, which we write as $t : A$, then we consider the proposition $A$ to be true.
-	\item Otherwise, we don't know anything about $A$.
+	\item There's a strange parallel going on between propositions and types.
+	\item Types are, obviously, not either true or false -- they are inhabited by programs.
+	\item A program $t$ of type $A$ is something that, after performing some computations, returns an element of type $A$.
+	\item The meaning of a type $A$ is determined by how we can write programs of type $A$ and how we can use programs of type $A$ to write other programs.
 \end{itemize}
 \end{frame}
 
-% Explain the "propositions as types" paradigm.
-% Make sure to strongly emphasize that in this
-% interpretation logic is constructive and explain
-% what that means.
+\begin{frame}{Propositions are types, proofs are programs}
+\begin{itemize}
+	\item This ``strange parallel'' is not a coincidence. There are no coincidences in mathematics!
+	\item It is most often referred to as the Curry-Howard correspondence, after two out of many people who discovered it.
+	\item But it is better presented as a set of slogans:
+	\item \textbf{Propositions are types.}
+	\item \textbf{Proofs are programs.}
+	\item \textbf{Proving theorems is just writing programs.}
+	\item ... and a few more, which we'll see shortly.
+\end{itemize}
+\end{frame}
 
-\subsubsection{Function types are implications}
-\subsubsection{Sum is disjunction}
-\subsubsection{Product is conjunction}
-\subsubsection{Unit is True}
-% In the above subsubsections, explain the meaning of all connectives one by one.
+\begin{frame}{True is the unit type 1/2}
+\begin{itemize}
+	\item There's the unit type \m{unit}.
+	\item It's sole element is \m{()}.
+	\item We can't do anything useful with it.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{True is the unit type 2/2}
+\begin{itemize}
+	\item There's the true proposition $\top$.
+	\item It's sole proof is \m{()}.
+	\item We can't conclude anything useful from it.
+\end{itemize}
+\end{frame}
+	
+\begin{frame}{Conjunction is the product type 1/2}
+\begin{itemize}
+	\item If \m{a} and \m{b} are types, then \m{a * b} is also a type.
+	\item Elements of \m{a * b} are pairs \m{(x, y)}, where \m{x :\ a} and \m{y :\ b}.
+	\item If we have a pair \m{x :\ a * b}, then \m{fst x :\ a} and \m{snd x :\ b}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Conjunction is the product type 2/2}
+\begin{itemize}
+	\item If $P$ and $Q$ are propositions, then $P \land Q$ is also a proposition.
+	\item To prove $P \land Q$, we have to prove $P$ and we have to prove $Q$, so\dots
+	\item \dots proofs of $P \land Q$ are of the form \m{(x, y)}, i.e. they are pairs where \m{x} is a proof of $P$ and \m{y} is a proof of $Q$.
+	\item If $P \land Q$ holds, then we can conclude that $P$ holds and we can conclude that $Q$ holds, so\dots
+	\item \dots if \m{x} is a proof of $P \land Q$, then \m{fst x} is a proof of $P$ and \m{snd x} is a proof of $Q$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Implication is the function type 1/2}
+\begin{itemize}
+	\item If \m{a} and \m{b} are types, then \m{a -> b} is also a type.
+	\item Elements of \m{a -> b} are of the form \m{fun (x :\ a) -> e} -- they are functions which take an input \m{x} of type \m{a} and return \m{e} of type \m{b} as output.
+	\item If we have a function \m{f :\ a -> b} and an \m{x :\ a}, then we we can apply \m{f} to \m{x}, written \m{f x}, to get an element of type \m{b}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Implication is the function type 2/2}
+\begin{itemize}
+	\item If $P$ and $Q$ are propositions, then $P \implies Q$ is also a proposition.
+	\item To prove $P \implies Q$, we need to assume that $P$ holds and then provve $Q$ under this assumption, so...
+	\item ... proofs of $P \implies Q$ are of the form \m{fun (p :\ P) -> q}, i.e. they are functions which take a proof of $P$ as input and return a proof of $Q$ as output.
+	\item If $P \implies Q$ holds and $P$ holds, we can conclude that $Q$ holds, so...
+	\item ... if \m{f} is a proof of $P \implies Q$ and \m{x} is a proof of $P$, then \m{f x} is a proof of $Q$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Disjunction is discriminated union}
+\begin{itemize}
+	\item If $P$ and $Q$ are propositions, then $P \lor Q$ is also a proposition.
+	\item To prove $P \lor Q$, we need either to prove $P$ or to prove $Q$, so\dots
+	\item \dots proofs of $P \lor Q$ are of the form \m{inl p}, where \m{p} is a proof of $P$, or of the form \m{inr q}, where \m{q} is a proof of $Q$.
+	\item If $P \lor Q$ holds and $P \implies R$ holds and $Q \implies R$ holds, we can conclude that $R$ holds, so\dots
+	\item \dots if \m{x} is a proof of $P \lor Q$, then we can match on \m{x} and retrieve the proofs of $P$/$Q$ and use them to prove $R$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{NOT to be continued}
+\begin{itemize}
+	\item I would like to say otherwise, but this lecture series will NOT be continued.
+\end{itemize}
+\end{frame}
 
 \subsubsection{Falsity and negation}
 % Introduce the empty type using the mechanism of
@@ -219,6 +291,11 @@
 % function and pair types from last lecture.
 % Mention that F* can prove some propositions all by itself,
 % using only the built-in SMT solvers.
+
+% Moved:
+% Make sure to strongly emphasize that in this
+% interpretation logic is constructive and explain
+% what that means.
 
 \section{Induction is recursion}
 % Start with a refresher on recursion.
@@ -303,11 +380,5 @@
 % Practice defining predicates and relations using inductive families.
 % Implement some decision procedures for equality of numbers, prove
 % some equational properties of numbers.
-
-\begin{frame}{}
-\begin{itemize}
-	\item 
-\end{itemize}
-\end{frame}
 
 \end{document}
