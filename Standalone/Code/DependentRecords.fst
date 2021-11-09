@@ -22,10 +22,10 @@ let concat (p : int * string) : string =
 
 // A dependent pair - the TYPE of the second component depends on the
 // VALUE of the first component.
-let p1 : (b : bool & (if b then int else string)) =
+let p1 : (x : bool & (if x then int else string)) =
     (| false, "false" |)
 
-let p2 : (b : bool & (if b then int else string)) =
+let p2 : (x : bool & (if x then int else string)) =
     (| true, -1234567890 |)
 
 // Note that this looks similar to what can be done in dynamically typed
@@ -36,13 +36,13 @@ let p2 : (b : bool & (if b then int else string)) =
 // be a string, not an int.
 // an int was expected.
 [@@ expect_failure]
-let p3 : (b : bool & (if b then int else string)) =
+let p3 : (x : bool & (if x then int else string)) =
     (| false, 123 |)
 
 // Similarly, this is not well-typed because for b = true we return a string,
 // but an int was expected.
 [@@ expect_failure]
-let p4 : (b : bool & (if b then int else string))  =
+let p4 : (x : bool & (if x then int else string))  =
     (| true, "hello there" |)
 
 // There are no built-in projections for dependent pairs, but we can

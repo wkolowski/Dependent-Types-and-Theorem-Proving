@@ -9,6 +9,8 @@ let x : btwn_0_10 = 5
 [@@ expect_failure]
 let x' : btwn_0_10 = 14
 
+
+
 // We can refine products and records.
 type currency = | USD | EUR | PLN
 
@@ -30,6 +32,8 @@ let dollars_bad : m : small_money{m.cur = EUR} =
     cur = USD;
     amount = 5;
 }
+
+
 
 // We can refine inductive types.
 let nonempty (#a : Type) (l : list a) : bool =
@@ -54,8 +58,17 @@ let rec len (#a : Type) (l : list a) : nat =
         | []     -> 0
         | _ :: t -> 1 + len t
 
-// Refinements are powerful enough to prove some properties of recursive
-// functions.
+
+
+// We can define vec as lists paired with a proof that the length is equal to n.
+open FStar.List
+
+let vec (a : Type) (n : nat) : Type =
+    l : list a & (length l = n)
+
+
+
+// Refinements are powerful enough to prove some properties of recursive functions.
 let rec map (#a #b : Type) (f : a -> b) (l : list a) :
     r : list b {len r = len l} =
     match l with

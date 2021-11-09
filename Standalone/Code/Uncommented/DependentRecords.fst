@@ -2,26 +2,19 @@ module DependentRecords
 
 open FStar.String
 
-
-
-
+// Usual pairs.
 let p : int * string = (42, "42")
-
 
 let n = fst p
 let s = snd p
-
 
 let concat (p : int * string) : string =
     match p with
     | (n, s) -> string_of_int n ^ s
 
-
-
-let p' : b : bool & (if b then nat else string) =
+// Dependent pairs.
+let p' : x : bool & (if x then nat else string) =
     (| false, "false" |)
-
-
 
 let fst' (#a : Type) (#b : a -> Type) (p : (x : a & b x)) : a =
     match p with
@@ -33,24 +26,7 @@ let snd' (#a : Type) (#b : a -> Type) (p : (x : a & b x)) : b (fst' p) =
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// DO NOT REPRESENT FORMS LIKE THIS!
 type pizzaReason = | NotApplicable | ItsCheap | ItsTasty | Other
 
 type pizzaForm =
@@ -58,12 +34,6 @@ type pizzaForm =
     doYouLikePizza    : bool;
     whyDoYouLikePizza : pizzaReason;
 }
-
-
-
-
-
-
 
 let evilAnswer : pizzaForm =
 {
@@ -77,10 +47,6 @@ let evilAnswer2 : pizzaForm =
     whyDoYouLikePizza = ItsTasty;
 }
 
-
-
-
-
 let validPizzaForm (f : pizzaForm) : bool =
     match f.doYouLikePizza, f.whyDoYouLikePizza with
     | true, NotApplicable  -> false
@@ -90,27 +56,14 @@ let validPizzaForm (f : pizzaForm) : bool =
 
 
 
-
-
-
-
-
-
-
-
+// This is how you should represent forms using dependent records.
 type pizzaReason' = | ItsCheap' | ItsTasty' | Other'
 
 type dependentPizzaForm =
 {
     doYouLikePizza'    : bool;
-    
-    
-    
-    
-    
     whyDoYouLikePizza' : (if doYouLikePizza' then pizzaReason' else unit);
 }
-
 
 let like : dependentPizzaForm =
 {
@@ -118,33 +71,20 @@ let like : dependentPizzaForm =
     whyDoYouLikePizza' = ItsTasty';
 }
 
-
-
-
 let dislike : dependentPizzaForm =
 {
     doYouLikePizza'    = false;
     whyDoYouLikePizza' = ();
 }
 
-
-
-
-
-
+// Of course, such simple forms do not need dependent records.
 type algebraicPizzaForm =
     | DoesntLikePizza : algebraicPizzaForm
     | LikesPizza      : (r : pizzaReason') -> algebraicPizzaForm
 
 
 
-
-
-
-
-
-
-
+// But more complex forms DO benefit from dependent records.
 type covidStatus = | Healthy | Ill | Recovered | Dead
 
 type covidSubform =
@@ -157,7 +97,6 @@ type covidSubform =
     
     willYouVaccinate : bool;
 }
-
 
 type progLang = | Haskell | Fsharp | Python | Cpp | OtherLang
 
@@ -173,10 +112,7 @@ type programmingSubform =
     favouriteLang : progLang;
 }
 
-
 type nationality = | Polish | American
-
-
 
 let ssn : Type = string
 let pesel : Type = string
@@ -186,29 +122,17 @@ type bigForm =
     
     firstName : string;
     
-    
     nationality : nationality;
-    
-    
-    
-    
     id : (match nationality with
           | Polish   -> pesel
           | American -> ssn);
 
-    
-    
-    
-    
     areYouAProgrammer : bool;
     programmingSubform :
         (match areYouAProgrammer with
         | true  -> programmingSubform
         | false -> unit);
 
-    
-    
-    
     covidStatus : covidStatus;
     covidSubform :
         (match covidStatus with

@@ -1,13 +1,30 @@
 \documentclass{beamer}
 
 \usepackage{xcolor}
+\usepackage{stmaryrd}
 
 \newcommand{\m}[1]{\texttt{#1}}
 \newcommand{\e}[1]{\textbf{#1}}
 
+\newcommand{\notb}[1]{not #1}
+\newcommand{\andb}[2]{#1 \&\& #2}
+\newcommand{\orb}[2]{#1 || #2}
+\newcommand{\implb}[2]{#1 ==> #2}
+\newcommand{\iffb}[2]{#1 <=> #2}
+
+\newcommand{\true}{\m{true}}
+\newcommand{\false}{\m{false}}
+\newcommand{\mnotb}[1]{\m{not}\ #1}
+\newcommand{\mandb}[2]{#1\ \m{\&\&}\ #2}
+\newcommand{\morb}[2]{#1\ \m{||}\ #2}
+\newcommand{\mimplb}[2]{\m{\implb{#1}{#2}}}
+\newcommand{\miffb}[2]{\m{\iffb{#1}{#2}}}
+
+\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
+
 \title{Dependent Types and Theorem Proving: \\Introduction to Dependent Types}
 \author{Wojciech Kołowski}
-\date{November 2021}
+\date{9 November 2021}
 
 \usetheme{Darmstadt}
 
@@ -15,7 +32,7 @@
 
 \frame{\titlepage}
 
-\section{Greetings}
+\section{Intro}
 
 \begin{frame}{Prerequisites}
 \begin{itemize}
@@ -66,7 +83,7 @@
 \begin{frame}{Code snippet no 1 - basics of F*}
 \begin{itemize}
 	\item We will now see some code that shows how these prerequisites look in F* (hint: basically the same as in F\#).
-	\item See the file \texttt{Lecture1/Code/Prerequisites.fst}.
+	\item See the file \texttt{Standalone/Code/Prerequisites.fst}.
 \end{itemize}
 \end{frame}
 
@@ -214,15 +231,15 @@
 	\item \textbf{A family of types indexed by type \m{a}} is just a function \m{a -> Type}.
 	\item There can be many indices, like in \m{a -> b -> Type}.
 	\item We have already seen examples in the last code snippet:
-	\item \m{vec :\ Type -> nat -> Type} is a family of types whose members \m{vec a n} are lists of length \m{n} and elements of type \m{a}
-	\item \m{matrix :\ Type -> nat -> nat -> Type} is a family of types whose members \m{matrix a n m} are $n \times m$ matrices with entries of type \m{a}.
+	\item \m{Array :\ Type -> nat -> Type} is a family of types whose members \m{Array a n} are types of arrays of length \m{n} that hold elements of type \m{a}.
+	\item \m{Matrix :\ nat -> nat -> Type} is a family of types whose members \m{Matrix n m} are $n \times m$ matrices.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Code snippet no 2 - first-class types in F*}
 \begin{itemize}
 	\item It might a bit difficult to wrap your head around the idea of first-class types, so let's see how it plays out in F*.
-	\item The code snippet can be found in \m{Lecture1/Code/Universe.fst}
+	\item The code snippet can be found in \m{Standalone/Code/Universe.fst}
 \end{itemize}
 \end{frame}
 
@@ -273,7 +290,7 @@
 \begin{frame}{Code snippet no 3 - dependent functions in F*}
 \begin{itemize}
 	\item Let's see how to use dependent functions in F*.
-	\item See the code snippet \m{Lecture1/Code/DependentFunctions.fst}
+	\item See the code snippet \m{Standalone/Code/DependentFunctions.fst}
 \end{itemize}
 \end{frame}
 
@@ -322,7 +339,7 @@
 \begin{frame}{Code snippet no 4 - dependent records in F*}
 \begin{itemize}
 	\item Let's see how dependent records work in F*.
-	\item See the code snippet \m{Lecture1/Code/DependentRecords.fst}
+	\item See the code snippet \m{Standalone/Code/DependentRecords.fst}
 \end{itemize}
 \end{frame}
 
@@ -361,7 +378,7 @@
 \begin{frame}{Code snippet no 5 - inductive families in F*}
 \begin{itemize}
 	\item Let's see how inductive families work in F*.
-	\item See the code snippet \m{Lecture1/Code/InductiveFamilies.fst}
+	\item See the code snippet \m{Standalone/Code/InductiveFamilies.fst}
 \end{itemize}
 \end{frame}
 
@@ -376,51 +393,30 @@
 \end{itemize}
 \end{frame}
 
-\section{Refinement types}
+\section{Refinements}
 
-\begin{frame}{The problem of richness}
+\begin{frame}{Some downsides of dependent types}
 \begin{itemize}
     \item In dependently typed languages there is a lot of types.
     \item This is a blessing, because we can express all the complicated types and properties we need in order to guarantee correctness of our programs.
-    \item But the richness of types also causes problems: it is often the case that there are many ways to define essentially the same type.
+    \item But the richness of types also causes problems: it is often the case that there are many ways to define essentially the same type, which can give us a lot of headache.
+    \item It lso means we need to write a lot of boilerplate - for example, we need to define \m{map} separately for lists and vectors.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{The various faces of a \m{vec}tor 1/2}
-\begin{itemize}
-    \item We have already seen two incarnations of the type \m{vec a n} of vectors:
-    \item Functional, recursive: by recursion on the index.
-    \item Inductive, intrinsic: as an inductive family.
-    \item But there are at least two more definitions:
-    \item Functional, nonrecursive: as a function with domain \m{fin n}.
-    \item Inductive, extrinsic: as a pair of a list and a proof that it's length is equal to \m{n}.
-    \item \textbf{Which one should we use?}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{The various faces of a \m{vec}tor 2/2}
-\begin{itemize}
-	\item A summary of cons of each:
-	\item Functional, recursive: ugly.
-	\item Inductive, intrinsic: code duplication -- it is necessary to reimplement common list functions (append, map, etc.).
-    \item Functional, nonrecursive: ugly, higher-order representation, very difficult to implement functions (try to implement append if you don't believe me).
-    \item Inductive, extrinsic: a lot of boilerplate concerned with passing proofs around; need to reimplement list functions by wrapping them.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Refinement types}
+\begin{frame}{Refinement types to the rescue}
 \begin{itemize}
     \item \textbf{Refinement types are NOT dependent types!}
     \item A refinement is just a different name for a function that returns bool.
     \item A refinement type is a type paired with a refinement.
-    \item In F* syntax: \m{x : a{p x}} where \m{p : a -> bool}.
+    \item In F* syntax: \m{x \: a\{p x\}} where \m{p \: a -> bool} - the types of elements of type \m{a} for which \m{p x} is \m{true}.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Code snippet no 6 - refinement types in F*}
 \begin{itemize}
 	\item Let's see how refinement types work in F*.
-	\item See the code snippet \m{Lecture1/Code/Refinements.fst}
+	\item See the code snippet \m{Standalone/Code/Refinements.fst}
 \end{itemize}
 \end{frame}
 
@@ -466,6 +462,133 @@
 	\item This corresponds to the polynomial $F(X) = 1 + A \times X$.
 	\item $\m{List}(A)$ is the least fixed point of this polynomial, i.e. the smallest type $X$ that satisfies $F(X) = X$.
 	\item Here ``fixed point'' corresponds to the fact that we create lists using constructors (\m{nil} and \m{cons}), whereas ``least'' corresponds to the fact that all lists are made of finitely many constructors.
+\end{itemize}
+\end{frame}
+
+\section{Logic}
+
+\begin{frame}{Boolean ``logic''}
+\begin{itemize}
+	\item Being a programmer, you are good friends with the booleans, aren't you?
+	\item There are two booleans, \m{true} and \m{false}.
+	\item We can combine booleans \m{b} and \m{c} with the usual boolean functions:
+	\item \mnotb{b} -- ``not \m{b}''
+	\item \mandb{b}{c} -- ``\m{b} and \m{c}''
+	\item \morb{b}{c} -- ``\m{b} or \m{c}''
+\end{itemize}
+\end{frame}
+
+\begin{frame}{What is a logic}
+\begin{itemize}
+	\item Boolean logic is not an example of what logicians call a ``logic'', in the sense that it is not a ``logical system'', but merely a type with some unary and binary functions on it.
+	\item A logic usually consists of:
+	\item A definition of what \textbf{propositions} we're dealing with.
+	\item A \textbf{semantics}, which tells us what these propositions mean.
+	\item A \textbf{proof system}, which tells us which propositions can be proven and disproven.
+	\item A \textbf{soundness theorem} which states that propositions proven true using the proof system are semantically true.
+	\item Optionally, there may also be a \textbf{completeness theorem} which states that all semantically true propositions can be proven.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Propositions}
+\begin{itemize}
+	\item A proposition asserts that something is the case, irrespectively of whether this really is the case or not.
+	\item Math example: ``$4$ is a prime number.''
+	\item Software example: ``For each input string $x$, if $x$ is not malformed, my program produces as output an array of length at most $10$.''
+	\item Hardware example: ``This circuit implements addition of 16 bit integers.''
+	\item Real world example: ``It's raining or I like trains.''
+	\item \textbf{Beware! Formal logic is not very good for reasoning about the real world!}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Propositional constants and connectives}
+\begin{itemize}
+	\item Propositions (usual letters: $P, Q, R$) are defined as follows:
+	\item $\top$ -- the true proposition.
+	\item $\bot$ -- the false proposition.
+	\item $P, Q, R, \dots$ -- propositional variables.
+	\item $\neg P$ -- negation, read ``not $P$''.
+	\item $P \lor Q$ -- disjunction, read ``$P$ or $Q$''.
+	\item $P \land Q$ -- conjunction, read ``$P$ and $Q$''.
+	\item $P \implies Q$ -- implication, read ``$P$ implies $Q$'' or ``if $P$ then $Q$''.
+	\item $P \iff Q$ -- logical equivalence, read ``$P$ if and only if $Q$''.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Classical logic}
+\begin{itemize}
+	\item Classical logic is the most widely known/taught/used logical system in the world.
+	\item In classical logic, \textbf{we think of propositions as being either true or false.}
+	\item Therefore, classical logic is the logic in which truth values are the booleans.
+	\item The truth value of a propositional variable is determined by a \textbf{valuation} $v : \text{Var} \to \text{Bool}$.
+	\item If $v(P) = \true$, then $P$ is considered to be true.
+	\item Otherwise it's considered false.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Semantics of classical logic 1/2}
+\begin{itemize}
+	\item Given a valuation $v : \text{Var} \to \text{Bool}$, the truth value of a proposition can be determined with a recursive function $\sem{-} : \text{Prop} \to \text{Bool}$.
+	\item $\sem{\top} = \true$
+	\item $\sem{\bot} = \false$
+	\item $\sem{P} = v(P)$, where $P$ is a variable.
+	\item $\sem{\neg P} = \mnotb{\sem{P}}$
+	\item $\sem{P \lor Q} = \morb{\sem{P}}{\sem{Q}}$
+	\item $\sem{P \land Q} = \mandb{\sem{P}}{\sem{Q}}$
+	\item $\sem{P \implies Q} = \morb{(\mnotb{\sem{P}})}{\sem{Q}}$
+	\item $\sem{P \iff Q} = \sem{P}\ \m{==}\ \sem{Q}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Semantics of classical logic 2/2}
+\begin{itemize}
+	\item $P$ is satisfiable when $\sem{P} = \true$ for some valuation.
+	\item $P$ is falsifiable when $\sem{P} = \false$ for some valuation.
+	\item $P$ is a tautology when $\sem{P} = \true$ for all valuations.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Example}
+\begin{itemize}
+	\item Example: the proposition $P \implies Q$ is satisfiable (for $v(P) = \true, v(Q) = \true$).
+	\item It is also falsifiable (for $v(P) = \true, v(Q) = \false$).
+	\item Therefore, it is not a tautology.
+	\item Example: the proposition $P \land Q \implies Q \land P$ is a tautology.
+	\item We have $\sem{P \land Q \implies Q \land P} = \morb{(\mnotb{(\mandb{v(P)}{v(Q)})})}{(\mandb{v(P)}{v(Q)})}$.
+	\item For any values of $v(P)$ and $v(Q)$ we always get $\true$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The rest}
+\begin{itemize}
+	\item We can check whether a proposition is a tautology by trying all possible valuations, but there are exponentially many of them.
+	\item We can do better by defining a proof system with some axioms and inference rules, which would allow us to \textbf{prove} that a proposition is a tautology without trying all valuations.
+	\item We won't do that because \textbf{classical logic is not the right logical system for proving programs correct}.
+	\item We will use constructive logic instead.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Constructive logic 1/2}
+\begin{itemize}
+	\item In constructive logic, \textbf{propositions ARE NOT either true or false}.
+	\item In constructive logic we usually think about propositions \textbf{in terms of their proofs.}
+	\item In everyday language and also in mathematics as it is usually practiced, a ``proof'' means an argument by which one human demonstrates the truth of a statement to another human.
+	\item In constructive logic, a proof is a formal object which \textbf{certifies that the given proposition has been proven}, in which case we say that the propositions holds.
+	\item Meaning of propositions is determined by how we can prove them and how we can use their proofs to prove other propositions.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Constructive logic 2/2}
+\begin{itemize}
+	\item If we have a proof of $P$, we may think of it as ``true'' (although we shouldn't think in terms of true and false).
+	\item If we have a proof of $\neg P$, we may think that $P$ is ``false''.
+	\item If we have neither proof, we don't know anything about $P$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Propositions are types, proofs are programs}
+\begin{itemize}
+	\item TODO
 \end{itemize}
 \end{frame}
 

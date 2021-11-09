@@ -3,8 +3,8 @@ module DependentFunctions
 // We will now explain how to use dependent functions.
 
 // Let's start with a silly example.
-let silly (b : bool) : (if b then string else int) =
-    if b
+let silly (x : bool) : (if x then string else int) =
+    if x
     then "I FEEL LIKE I'M DYNAMICALLY TYPED, BUT NOPE!"
     else 42
 
@@ -23,20 +23,20 @@ let silly (b : bool) : (if b then string else int) =
 // This is not well-typed, because for b = false we return a string, whereas
 // an int was expected.
 [@@ expect_failure]
-let silly2 (b : bool) : (if b then string else int) =
+let silly2 (x : bool) : (if x then string else int) =
     "Always a string"
 
 // Similarly, this is not well-typed because for b = true we return an int,
 // but a string was expected.
 [@@ expect_failure]
-let silly3 (b : bool) : (if b then string else int) =
+let silly3 (x : bool) : (if x then string else int) =
     1234567890
 
 // This one is not well-typed too. For b = true we return an int, but a string
 // was expected. For b = false, we return a string, but an int was expected.
 [@@ expect_failure]
-let silly2 (b : bool) : (if b then string else int) =
-    if b
+let silly2 (x : bool) : (if x then string else int) =
+    if x
     then 15
     else "a string"
 
