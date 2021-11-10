@@ -48,7 +48,6 @@
 	\item You will get basic familiarity with the ideas behind all dependently typed languages.
 	\item You will learn about all the different kinds of dependent types and what they are good for.
 	\item You will be able to continue learning about dependent types on your own and won't be put off by all those obscure, scary and mysterious names and notations.
-	%\item Bonus: you will begin to see logic and mathematics in a very different light, much closer to your day job (at least if you are a programmer working in F\#).
 \end{itemize}
 \end{frame}
 
@@ -62,9 +61,6 @@
 	\item Dependent types.
 	\item Refinement types.
 	\item Effect system.
-	%\item Not a .NET language.
-	%\item Neither compiled nor interpreted -- it's a proof assistant, i.e. just a typechecker.
-	%\item To run a program, it has to be extracted to some other language, like F\#, OCaml, C or WASM, and then compiled.
 \end{itemize}
 \end{frame}
 
@@ -80,10 +76,10 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Code snippet no 1 - basics of F*}
+\begin{frame}{Code snippet no. 1 - basics of F*}
 \begin{itemize}
 	\item We will now see some code that shows how these prerequisites look in F* (hint: basically the same as in F\#).
-	\item See the file \texttt{Standalone/Code/Prerequisites.fst}.
+	\item See the file \href{https://github.com/wkolowski/Dependent-Types-and-Theorem-Proving/blob/master/Standalone/Code/Prerequisites.fst}{Standalone/Code/Prerequisites.fst}
 \end{itemize}
 \end{frame}
 
@@ -144,14 +140,14 @@
 	\item How to model this in our favourite programming language without dependent types?
 	\item We can define \m{Array a}, \textbf{the type of arrays that hold elements of type} \m{a}, and we can access its elements with a function \m{get :\ Array a -> int -> a}.
 	\item What happens, when $i$ is greater than the length of the array? Or, what happens when $i$ is negative?
-	\item \m{get [| 'a'; 'b'; 'c' ] 5} is well-typed, but will throw an \m{IndexOutOfBoundsException} or result in a segmentation fault.
+	\item \m{get [| 'a'; 'b'; 'c' |] 5} is well-typed, but will throw an \m{IndexOutOfBoundsException} or result in a segmentation fault.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Array access with dependent types}
 \begin{itemize}
-	\item In a language with dependent types we can define \m{Array a n}, \textbf{the type of arrays of length $n$ that hold elements of type} \m{a}, and we give array access the type \m{get :\ (n :\ $\mathbb{N}$) -> Array a n -> (i :\ int\{0 <= i < n \}) -> a}.
-	\item We use refinement types (which we will cover later today) to statically guarantee that \m{i} isn't out of bounds.
+	\item In a language with dependent types we can define \m{Array a n}, \textbf{the type of arrays of length $n$ that hold elements of type} \m{a}, and we give array access the type \m{get :\ (n :\ $\mathbb{N}$) -> Array a n -> (i :\ int\{0 <= i < n\}) -> a}.
+	\item We use refinement types (which we will cover later) to statically guarantee that \m{i} isn't out of bounds.
 	\item \m{get 3 [| 'a'; 'b'; 'c' |] 5} is not well-typed, because the typechecker can't prove \m{0 <= 5 < 3}, and thus \m{5} is not of type \m{int\{0 <= 5 < 3\}}.
 \end{itemize}
 \end{frame}
@@ -179,6 +175,7 @@
 \begin{itemize}
 	\item There's yet another kind of dependency, which is not present in F\#, but is present in F* and is the topic of this lecture.
 	\item \textbf{Types can depend on values}: \textbf{dependent types}.
+	\item We have already seen two examples: the type \m{Matrix n m} depends on the numbers \m{n} and \m{m}, and the type \m{Array a n} depends on the type \m{a} and the number \m{n}.
 	\item Given a functional language like F\#, how to enable types to depend on values?
 	\item Of course we want to retain the other kinds of dependencies (values on values, values on types, types on types).
 \end{itemize}
@@ -186,7 +183,7 @@
 
 \begin{frame}{Juggling dependencies}
 \begin{itemize}
-	\item It turns out it's best \textbf{throw away all kinds of dependencies besides the basic one} (values on values)\dots
+	\item It turns out it's best \textbf{throw away all kinds of dependencies besides the basic one} (values on values, i.e. functions)\dots
 	\item \dots and then \textbf{turn types into values}!
 	\item In other words: we want to make types first-class citizens of our language.
 	\item Then we will be able to express all 4 kinds of dependencies using plain old functions.
@@ -211,8 +208,8 @@
 \begin{itemize}
 	\item Heuristics from previous slides are nice\dots
 	\item but I prefer to think about first-class-ness in a different way, which is better from the functional programming point of view.
-	\item For a given programming, \textbf{a concept $X$ is first-class if there is a type of all $X$s}, loosely speaking.
-	\item This means that a language has first-class functions if for any two types $A$ and $B$ there is a type $A \to B$ of all functions from $A$ to $B$.
+	\item For a given programming language, \textbf{a concept $X$ is first-class if there is a type of all $X$s}, loosely speaking.
+	\item This means that, for example, a language has first-class functions if for any two types $A$ and $B$ there is a type $A \to B$ of all functions from $A$ to $B$.
 \end{itemize}
 \end{frame}
 
@@ -236,10 +233,10 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Code snippet no 2 - first-class types in F*}
+\begin{frame}{Code snippet no. 2 - first-class types in F*}
 \begin{itemize}
 	\item It might a bit difficult to wrap your head around the idea of first-class types, so let's see how it plays out in F*.
-	\item The code snippet can be found in \m{Standalone/Code/Universe.fst}
+	\item The code snippet can be found in \href{https://github.com/wkolowski/Dependent-Types-and-Theorem-Proving/blob/master/Standalone/Code/Universe.fst}{Standalone/Code/Universe.fst}
 \end{itemize}
 \end{frame}
 
@@ -287,10 +284,10 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Code snippet no 3 - dependent functions in F*}
+\begin{frame}{Code snippet no. 3 - dependent functions in F*}
 \begin{itemize}
 	\item Let's see how to use dependent functions in F*.
-	\item See the code snippet \m{Standalone/Code/DependentFunctions.fst}
+	\item See the code snippet \href{https://github.com/wkolowski/Dependent-Types-and-Theorem-Proving/blob/master/Standalone/Code/DependentFunctions.fst}{Standalone/Code/DependentFunctions.fst}
 \end{itemize}
 \end{frame}
 
@@ -336,10 +333,10 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Code snippet no 4 - dependent records in F*}
+\begin{frame}{Code snippet no. 4 - dependent records in F*}
 \begin{itemize}
 	\item Let's see how dependent records work in F*.
-	\item See the code snippet \m{Standalone/Code/DependentRecords.fst}
+	\item See the code snippet \href{https://github.com/wkolowski/Dependent-Types-and-Theorem-Proving/blob/master/Standalone/Code/DependentRecords.fst}{Standalone/Code/DependentRecords.fst}
 \end{itemize}
 \end{frame}
 
@@ -375,14 +372,14 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Code snippet no 5 - inductive families in F*}
+\begin{frame}{Code snippet no. 5 - inductive families in F*}
 \begin{itemize}
 	\item Let's see how inductive families work in F*.
-	\item See the code snippet \m{Standalone/Code/InductiveFamilies.fst}
+	\item See the code snippet \href{https://github.com/wkolowski/Dependent-Types-and-Theorem-Proving/blob/master/Standalone/Code/InductiveFamilies.fst}{Standalone/Code/InductiveFamilies.fst}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Summary}
+\begin{frame}{Summary of dependent types}
 \begin{itemize}
 	\item Dependent types are types that can depend on values.
 	\item In dependently typed languages:
@@ -400,29 +397,38 @@
     \item In dependently typed languages there is a lot of types.
     \item This is a blessing, because we can express all the complicated types and properties we need in order to guarantee correctness of our programs.
     \item But the richness of types also causes problems: it is often the case that there are many ways to define essentially the same type, which can give us a lot of headache.
-    \item It lso means we need to write a lot of boilerplate - for example, we need to define \m{map} separately for lists and vectors.
+    \item It also means we need to write a lot of boilerplate - for example, we need to define \m{map} separately for lists and vectors.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Refinement types to the rescue}
 \begin{itemize}
-    \item \textbf{Refinement types are NOT dependent types!}
-    \item A refinement is just a different name for a function that returns bool.
-    \item A refinement type is a type paired with a refinement.
-    \item In F* syntax: \m{x \: a\{p x\}} where \m{p \: a -> bool} - the types of elements of type \m{a} for which \m{p x} is \m{true}.
+    \item Beware: refinement types are not commonly considered to be dependent types!
+    \item A refinement is just a different name for a function that returns a boolean.
+    \item A refinement type is a type together with a refinement.
+    \item In F* syntax: if \m{p :\ a -> bool}, then \m{x :\ a\{p x\}} is the type of values of type \m{a} for which \m{p} returns \m{true}.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Code snippet no 6 - refinement types in F*}
+\begin{frame}{Code snippet no. 6 - refinement types in F*}
 \begin{itemize}
 	\item Let's see how refinement types work in F*.
-	\item See the code snippet \m{Standalone/Code/Refinements.fst}
+	\item See the code snippet \href{https://github.com/wkolowski/Dependent-Types-and-Theorem-Proving/blob/master/Standalone/Code/Refinements.fst}{Standalone/Code/Refinements.fst}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{This is (almost) the end}
+\begin{itemize}
+	\item This is the end of the basic version of the slides.
+	\item However, there are two bonus sections, which were initially supposed to be put into a continuation of this presentation (which was eventually cancelled).
+	\item The next section describes the alternative names and notations used for dependent types in the literature.
+	\item The last section is an (incomplete) introduction to logic. Towards the end, it explains the link between dependent types and logic.
 \end{itemize}
 \end{frame}
 
 \section{Life of Pi}
 
-\begin{frame}{Pi type and multiplication}
+\begin{frame}{Pi types and multiplication}
 \begin{itemize}
 	\item The dependent function type \textbf{is also known as the Pi type}.
 	\item \textbf{This name comes from a notation}: \m{(x :\ a) -> b x} is sometimes written as $\displaystyle \prod_{x :\ a} b(x)$.
@@ -433,7 +439,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Sigma type and addition}
+\begin{frame}{Sigma types and addition}
 \begin{itemize}
 	\item The dependent pair type \textbf{is also known as the Sigma type}.
 	\item \textbf{This name comes from a notation}: \m{(x :\ a) \& b x} is sometimes written as $\displaystyle \sum_{x :\ a} b(x)$.
@@ -559,7 +565,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{The rest}
+\begin{frame}{Classical logic is not that good}
 \begin{itemize}
 	\item We can check whether a proposition is a tautology by trying all possible valuations, but there are exponentially many of them.
 	\item We can do better by defining a proof system with some axioms and inference rules, which would allow us to \textbf{prove} that a proposition is a tautology without trying all valuations.
@@ -588,7 +594,25 @@
 
 \begin{frame}{Propositions are types, proofs are programs}
 \begin{itemize}
-	\item TODO
+	\item \textbf{We can represent propositions using types.}
+	\item $\top$ corresponds to the \m{unit} type.
+	\item $\bot$ corresponds to the \m{Empty} type (which can be defined as a disjoint union with zero constructors).
+	\item $P \lor Q$ corresponds to a disjoint union \m{or} with constructors \m{inl :\ P -> or P Q} and \m{inr :\ Q -> or P Q}.
+	\item $P \land Q$ corresponds to the pair type \m{P * Q}.
+	\item $P \implies Q$ corresponds to the function type \m{P -> Q}.
+	\item $\neg P$ corresponds to the function type \m{P -> Empty}.
+	\item $P \iff Q$ corresponds to the type \m{(P -> Q) * (Q -> P)}.
+	\item \textbf{You already know how to prove these propositions -- just write the appropriate program!}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dependent types, predicates, relations and quantifiers}
+\begin{itemize}
+	\item What about dependent types?
+	\item Type families \m{p :\ a -> Type} correspond to predicates, i.e. propositions that describe properties of objects of type \m{a}. Type families with many indices, like \m{r :\ a -> b -> Type}, correspond to relations, i.e. propositions that describe relationships between a thing of type \m{a} and a thing of type \m{b}.
+	\item The dependent function type \m{(x :\ a) -> p x} corresponds to the universal quantifier $\forall x : a, p(x)$, which can be read as ``each object \m{x} of type \m{a} satisfies the predicate \m{p}''.
+	\item The dependent pair type \m{(x :\ a) \& p x} corresponds to the existential quantifier $\exists x : a, p(x)$, which can be read as ``there exists an object \m{x} of type \m{a} which satisfies the predicate \m{p}''.
+	\item Inductive families are a very comfortable way of defining predicates and relations.
 \end{itemize}
 \end{frame}
 

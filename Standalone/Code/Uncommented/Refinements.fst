@@ -52,25 +52,19 @@ let safe_head' (#a : Type) (l : list a {Cons? l}) : a =
         | []     -> () // SMT magic.
         | h :: _ -> h
 
-// We can use custom functions inside refinements.
-let rec len (#a : Type) (l : list a) : nat =
-    match l with
-        | []     -> 0
-        | _ :: t -> 1 + len t
 
 
-
-// We can define vec as lists paired with a proof that the length is equal to n.
 open FStar.List
 
+// We can define vec as lists paired with a proof that the length is equal to n.
 let vec (a : Type) (n : nat) : Type =
-    l : list a & (length l = n)
+    l : list a {length l = n}
 
 
 
 // Refinements are powerful enough to prove some properties of recursive functions.
 let rec map (#a #b : Type) (f : a -> b) (l : list a) :
-    r : list b {len r = len l} =
+    r : list b {length r = length l} =
     match l with
         | []     -> []
         | h :: t -> f h :: map f t

@@ -9,6 +9,8 @@ let x : btwn_0_10 = 5
 [@@ expect_failure]
 let x' : btwn_0_10 = 14
 
+
+
 // We can refine products and records.
 type currency = | USD | EUR | PLN
 
@@ -31,6 +33,8 @@ let dollars_bad : m : small_money{m.cur = EUR} =
     amount = 5;
 }
 
+
+
 // We can refine inductive types.
 let nonempty (#a : Type) (l : list a) : bool =
     match l with
@@ -48,23 +52,19 @@ let safe_head' (#a : Type) (l : list a {Cons? l}) : a =
         | []     -> () // SMT magic.
         | h :: _ -> h
 
-// We can use custom functions inside refinements.
-let rec len (#a : Type) (l : list a) : nat =
-    match l with
-        | []     -> 0
-        | _ :: t -> 1 + len t
 
 
 open FStar.List
 
 // We can define vec as lists paired with a proof that the length is equal to n.
 let vec (a : Type) (n : nat) : Type =
-    l : list a & (length l = n)
+    l : list a {length l = n}
 
-// Refinements are powerful enough to prove some properties of recursive
-// functions.
+
+
+// Refinements are powerful enough to prove some properties of recursive functions.
 let rec map (#a #b : Type) (f : a -> b) (l : list a) :
-    r : list b {len r = len l} =
+    r : list b {length r = length l} =
     match l with
         | []     -> []
         | h :: t -> f h :: map f t

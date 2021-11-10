@@ -8,32 +8,32 @@ let silly (x : bool) : (if x then string else int) =
     then "I FEEL LIKE I'M DYNAMICALLY TYPED, BUT NOPE!"
     else 42
 
-// 'silly' is a function that takes b : bool as input and returns...
+// 'silly' is a function that takes x : bool as input and returns...
 // Recall that in F* types are first-class, which means, among others, that
-// we can compute them at runtime. (if b then string else int) is precisely
-// such a thing - a type computed at runtime based on the value of b.
+// we can compute them at runtime. (if x then string else int) is precisely
+// such a thing - a type computed at runtime based on the value of x.
 
-// What 'silly' does is check whether b is true or false and then returns
+// What 'silly' does is check whether x is true or false and then returns
 // some value of the appropriate type.
 
 // Note that this looks similar to what can be done in dynamically typed
 // languages like Python, but here the typing is static - let's try to change
 // the value returned by 'silly' and see what F* tells us.
 
-// This is not well-typed, because for b = false we return a string, whereas
+// This is not well-typed, because for x = false we return a string, whereas
 // an int was expected.
 [@@ expect_failure]
 let silly2 (x : bool) : (if x then string else int) =
     "Always a string"
 
-// Similarly, this is not well-typed because for b = true we return an int,
+// Similarly, this is not well-typed because for x = true we return an int,
 // but a string was expected.
 [@@ expect_failure]
 let silly3 (x : bool) : (if x then string else int) =
     1234567890
 
-// This one is not well-typed too. For b = true we return an int, but a string
-// was expected. For b = false, we return a string, but an int was expected.
+// This one is not well-typed too. For x = true we return an int, but a string
+// was expected. For x = false, we return a string, but an int was expected.
 [@@ expect_failure]
 let silly2 (x : bool) : (if x then string else int) =
     if x

@@ -36,7 +36,6 @@ type fin : nat -> Type =
 
 let rec vget (#a : Type) (#n : nat) (v : vec a n) (i : fin n)  : a =
     match v with
-    //| VNil      -> () 
     | VCons h t ->
         match i with
         | FinZ    -> h
