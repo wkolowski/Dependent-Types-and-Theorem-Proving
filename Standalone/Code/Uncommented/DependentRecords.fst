@@ -116,7 +116,7 @@ type programmingSubform =
 
 type nationality = | Polish | American
 
-let ssn : Type = string
+let ssn : Type = int
 let pesel : Type = string
 
 type bigForm =
