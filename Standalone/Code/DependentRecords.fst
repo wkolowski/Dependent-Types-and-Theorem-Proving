@@ -124,24 +124,24 @@ let validPizzaForm (f : pizzaForm) : bool =
 // precisely in what way.
 
 // We don't need NotApplicable anymore, so we make a new type.
-type pizzaReason' = | ItsCheap' | ItsTasty' | Other'
+type pizzaReason2 = | ItsCheap2 | ItsTasty2 | Other2
 
 type dependentPizzaForm =
 {
-    doYouLikePizza'    : bool;
+    doYouLikePizza2    : bool;
     
     // This is the essence of dependent records: the TYPE of the field
-    // whyDoYouLikePizza' depends on the VALUE of the field doYouLikePizza'.
-    // In case the value is true, the type is pizzaReason'. In case it's
+    // whyDoYouLikePizza2 depends on the VALUE of the field doYouLikePizza2.
+    // In case the value is true, the type is pizzaReason2. In case it's
     // false, the type is unit, i.e. the type that has only one element.
-    whyDoYouLikePizza' : (if doYouLikePizza' then pizzaReason' else unit);
+    whyDoYouLikePizza2 : (if doYouLikePizza2 then pizzaReason2 else unit);
 }
 
 // People who like pizza must give a correct reason for it.
 let like : dependentPizzaForm =
 {
-    doYouLikePizza'    = true;
-    whyDoYouLikePizza' = ItsTasty';
+    doYouLikePizza2    = true;
+    whyDoYouLikePizza2 = ItsTasty2;
 }
 
 // People who don't like pizza can't provide a reason for why they like it,
@@ -149,8 +149,8 @@ let like : dependentPizzaForm =
 // the reason.
 let dislike : dependentPizzaForm =
 {
-    doYouLikePizza'    = false;
-    whyDoYouLikePizza' = ();
+    doYouLikePizza2    = false;
+    whyDoYouLikePizza2 = ();
 }
 
 // Of course, it is also possible to model this simple form using ordinary
@@ -160,7 +160,7 @@ let dislike : dependentPizzaForm =
 
 type algebraicPizzaForm =
     | DoesntLikePizza : algebraicPizzaForm
-    | LikesPizza      : (r : pizzaReason') -> algebraicPizzaForm
+    | LikesPizza      : (r : pizzaReason2) -> algebraicPizzaForm
 
 // But this works only because we're dealing with a single, simple question.
 // If we wanted to model a question with more complicated presuppositions or
@@ -174,7 +174,7 @@ type algebraicPizzaForm =
 type nationality = | American | Polish
 
 // SSN is the American Social Security Number and PESEL is a similar thing for
-// Poland. We define them as nat/string just to show that the type of ID we
+// Poland. We define them as int/string just to show that the type of ID we
 // ask for can depend on the nationality.
 let ssn : Type = int
 let pesel : Type = string

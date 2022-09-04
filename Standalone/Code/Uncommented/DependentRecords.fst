@@ -59,30 +59,30 @@ let validPizzaForm (f : pizzaForm) : bool =
 
 
 // This is how you should represent forms using dependent records.
-type pizzaReason' = | ItsCheap' | ItsTasty' | Other'
+type pizzaReason2 = | ItsCheap2 | ItsTasty2 | Other2
 
 type dependentPizzaForm =
 {
-    doYouLikePizza'    : bool;
-    whyDoYouLikePizza' : (if doYouLikePizza' then pizzaReason' else unit);
+    doYouLikePizza2    : bool;
+    whydoYouLikePizza2 : (if doYouLikePizza2 then pizzaReason2 else unit);
 }
 
 let like : dependentPizzaForm =
 {
-    doYouLikePizza'    = true;
-    whyDoYouLikePizza' = ItsTasty';
+    doYouLikePizza2    = true;
+    whydoYouLikePizza2 = ItsTasty2;
 }
 
 let dislike : dependentPizzaForm =
 {
-    doYouLikePizza'    = false;
-    whyDoYouLikePizza' = ();
+    doYouLikePizza2    = false;
+    whydoYouLikePizza2 = ();
 }
 
 // Of course, such simple forms do not need dependent records.
 type algebraicPizzaForm =
     | DoesntLikePizza : algebraicPizzaForm
-    | LikesPizza      : (r : pizzaReason') -> algebraicPizzaForm
+    | LikesPizza      : (r : pizzaReason2) -> algebraicPizzaForm
 
 
 
